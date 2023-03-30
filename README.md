@@ -10,12 +10,31 @@ Soon!
 
 | Name | Description |  |
 |------------ |------------|------------|
-Weight| Feature weight   that represents the relative importance of each feature | $ {w} $
-Points| Assigned points of each feature | ${p}$
+Weight| Feature weight   that represents the relative importance of each feature | $w$
+Points| Assigned points of each feature | $p$
 Normalized weight | Weights unit vector normalization | $${\hat{w}} = \frac{w_n}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}$$
 Lead score | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i}{p_i}$$
 
 ***
+
+## Index
+1. [About](#about)
+    1. [Predictive Model](#predictive-model)
+    2. [Non-predictive Model](#non-predictive-model)
+2. [Disclaimer](#disclaimer)
+3. [Installation](#installation)
+4. [Understanding the Models](#understanding-the-models)
+    1. [Predictive Model](#predictive-model-1)
+    2. [Non-predictive Model](#non-predictive-model-1)
+        1. [Weight (${w}$):](#weight-w)
+        2. [Normalized Weight (${\hat{w}}$):](#normalized-weight-hatw)
+            1. [Unit vector nomalization:](#unit-vector-nomalization)
+            2. [Feature vector magnitude:](#feature-vector-magnitude)
+            3. [Normalized weight vector:](#normalized-weight-vector)
+        3. [Points (${p}$):](#points-p)
+        4. [Lead Score ($\lambda$):](#lead-score-lambda)
+        5. [Features ($f_n$)](#features-f1f2f3--fn)
+
 ## Disclaimer
 This library is in active development. Suggestions and contributions are welcome.
 ## Installation
@@ -55,14 +74,16 @@ The model needs to be flexible and adaptable to accommodate changes in the busin
 
 The normalized weight is a unit vector that is used to scale data in a way that preserves the relative relationships between the features when new features are added.
 
-    The basic idea is to transform the data such that the magnitude of the vector formed by the features is equal to 1. This ensures that each feature is scaled proportionally to the others, so the relative relationships between them is preserved when new features are added.
+The basic idea is to transform the data such that the magnitude of the vector formed by the features is equal to 1. This ensures that each feature is scaled proportionally to the others, so the relative relationships between them is preserved when new features are added.
 
+You may be asking yourself, why not just recalculate the weights after adding or removing a feature?
+Well, this may work if you have the original data and just want to make a report out of it, but once you calculate the lead score and send the conversion events to plaftorms such as Google Analytics, Facebook Ads, etc, the scores registered in those platforms can't be changed. Later on you may want to create audiences based on the lead score, but you won't be able to do that if the scoring model has changed. #TODO rewrite this section
 
 #### Unit vector nomalization:
 $$
 \hat{w_n} = \frac{w_n}{|w|}
 $$
-#### Feature vector magnitude:
+#### Feature weights vector magnitude:
 $$
 |w| = \sqrt{\sum\limits^{n}_{i=0}w_i^2}
 $$
