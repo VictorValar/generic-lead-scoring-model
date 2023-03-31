@@ -5,7 +5,7 @@ from glsm.features import Feature
 @fixture
 def non_predictive_model() -> NonPredictive:
     '''
-    Instanciates a non predictive model with three features
+    Yields a NonPredictive() model with three features
     '''
     model = NonPredictive()
 
@@ -19,7 +19,7 @@ def non_predictive_model() -> NonPredictive:
             ("More than 200K",100),
         ]
     )
-    model.add_feature(feature_a)
+    model.add_features([feature_a])
 
     feature_b = Feature(
         name="Industry",
@@ -32,7 +32,7 @@ def non_predictive_model() -> NonPredictive:
             ("Health",100),
         ]
     )
-    model.add_feature(feature_b)
+    model.add_features([feature_b])
 
     feature_c = Feature(
         name="Mkt Investment",
@@ -46,21 +46,22 @@ def non_predictive_model() -> NonPredictive:
             ("More than $400K",100),
         ]
     )
-    model.add_feature(feature_c)
+    model.add_features([feature_c])
 
     model.compute_normalized_weights()
 
     yield model
 
-
 @fixture
 def lead():
     '''
-    Instanciates a lead
+    Yields a lead
     '''
-    lead = {
+
+    lead = { # lambda = 81.43
         "Monthly Users": "50K - 100K",
-        "Industry": "Retail",
-        "Mkt Investment": "100k - $200K",
+        "Industry": "Technology",
+        "Mkt Investment": "$300K - $400K",
     }
+
     yield lead

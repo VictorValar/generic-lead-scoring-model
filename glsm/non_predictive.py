@@ -1,34 +1,58 @@
 from pydantic import BaseModel, conlist
-from typing import List, Optional
+from typing import List
 from glsm.features import Feature
 import math
 
 class NonPredictive(BaseModel):
     '''
     A non predictive lead scoring model.
-    @param features: List of features of the model
-    @param round_decimals: Number of decimals to round the lambda value, default is 2
+
+    Returns True if param1 is equal to param2's length.
+
+    Args:
+        features: List of features of the model
+        round_decimals: Number of decimals to round the lambda value, default is 2
+
+    Returns:
+        float: The computed lambda value, rounded to the number of decimals specified in the model
+
     '''
     features: conlist(Feature) = []
     round_decimals: int = 2
 
-    def add_feature(self, feature: Feature):
+    def add_features(self, features: List[Feature]):
         '''
-        Adds a feature to the model.
-        Must be of type Feature otherwise raises a TypeError
+        Adds a list of features to the model.
+
+        Must be of type Feature otherwise raises a TypeError.
+
+        Args:
+            features (List[Feature]): List of features to be added to the model
+
+        Raises:
+            TypeError: If features is not of type List[Feature]
+
         '''
+        for feature in features:
+            if not isinstance(feature, Feature):
+                raise TypeError("All element of the list must be of type Feature")
 
-        if isinstance(feature, Feature):
-            self.features.append(feature)
-        else:
-            raise TypeError("Features must be of type Feature")
-
+        self.features.extend(features)
 
     def compute_lambda(self, lead: dict) -> float:
         '''
-        Computes the lambda value of the lead. Lead score(lambda) is the sum of the normalized weight of each feature multiplied by the points assined to each feature.
-        @param lead: A dictionary containing feature names as keys and feature label as values
+        Computes Lead score of a given lead.
+
+        Lead score is the dot product of the normalized weights and the points assigned to the labels of the features.
+
+        Args:
+            lead (dict): A dictionary containing feature names as keys and feature label as values.
+            Example: lead = {"feature_name": "label"},...}
+
+        Returns:
+            float: The computed lambda value, rounded to the number of decimals specified in the model
         '''
+
         self.compute_normalized_weights()
 
         lambda_value = sum(
@@ -42,7 +66,9 @@ class NonPredictive(BaseModel):
 
     def compute_normalized_weights(self):
         '''
-        Computes the normalized weights of the features
+        Computes the normalized weights of the model features.
+
+        The normalized weight of a feature is the weight of the feature divided by the magnitude of the weights of all the features.
         '''
 
         magnitude = math.sqrt(
