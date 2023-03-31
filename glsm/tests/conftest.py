@@ -51,3 +51,16 @@ def non_predictive_model() -> NonPredictive:
     model.compute_normalized_weights()
 
     yield model
+
+
+@fixture
+def lead():
+    '''
+    Instanciates a lead
+    '''
+    lead = {
+        "Monthly Users": "50K - 100K",
+        "Industry": "Retail",
+        "Mkt Investment": "100k - $200K",
+    }
+    yield lead

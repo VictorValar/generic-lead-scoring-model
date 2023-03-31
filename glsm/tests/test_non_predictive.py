@@ -19,5 +19,15 @@ def test_features_first_element_name_types(non_predictive_model):
 
 def test_sum_squares_normalized_weights(non_predictive_model):
     features = non_predictive_model.features
-    weights_sqr_sum = sum([feature.normalized_weight**2 for feature in features])
+    weights_sqr_sum = sum(
+        [feature.normalized_weight**2 for feature in features]
+    )
     assert weights_sqr_sum == 1
+
+
+def test_compute_lambda(non_predictive_model, lead):
+
+    model = non_predictive_model
+    lambda_value = model.compute_lambda(lead)
+
+    assert lambda_value == 50

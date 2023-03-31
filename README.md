@@ -109,7 +109,7 @@ $$
 $$
 
 ### Lead Score ($\lambda$):
-Lead score is the sum of the normalized weight of each feature multiplied by the points assined to each feature.
+Lead score is the sum of squares the normalized weights of each feature multiplied by the points assined to each feature.
 
 
 $$
