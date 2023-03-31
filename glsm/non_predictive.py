@@ -1,9 +1,15 @@
-from pydantic import BaseModel, Field, validator
-from typing import List, Optional, Union
+from pydantic import BaseModel, conlist
+from typing import List, Optional
 
-from glsm.features import Features
+from glsm.features import Feature
 
 class NonPredictive(BaseModel):
-    def __init__(self, ):
-        id: int
-        features = List[Features]
+    features: conlist(Feature) = []
+
+    def add_feature(self, feature: Feature):
+
+        if isinstance(feature, Feature):
+            self.features.append(feature)
+        else:
+            raise TypeError("Feature must be of type Features")
+
