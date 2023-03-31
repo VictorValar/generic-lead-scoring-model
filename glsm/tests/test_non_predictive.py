@@ -15,3 +15,9 @@ def test_features_first_element_name_types(non_predictive_model):
 
     assert type(map[0][0]) == str
     assert type(map[0][1]) == float
+
+
+def test_sum_squares_normalized_weights(non_predictive_model):
+    features = non_predictive_model.features
+    weights_sqr_sum = sum([feature.normalized_weight**2 for feature in features])
+    assert weights_sqr_sum == 1

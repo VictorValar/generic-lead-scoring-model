@@ -1,6 +1,6 @@
-from pydantic import BaseModel
-from typing import List, Tuple
-from typing_extensions import TypedDict
+from pydantic import BaseModel, validator
+from typing import List, Tuple, Optional
+
 
 
 class Feature(BaseModel):
@@ -9,9 +9,15 @@ class Feature(BaseModel):
     '''
     name: str
     points_map: List[Tuple[str, float]]
+    weight: float
+    normalized_weight: float = None
 
-    class Config:
-        arbitrary_types_allowed = True
+    # class Config:
+    #     arbitrary_types_allowed = True
 
-    def normalize_weights(self):
-        pass
+
+
+
+
+
+
