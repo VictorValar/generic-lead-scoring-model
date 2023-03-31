@@ -8,12 +8,12 @@ The goal of the lead score is to provide a qualification metric for comparison b
 Soon!
 ### Non-predictive Model
 
-| Name | Description |  |
+| Name | Description | Variable |
 |------------ |------------|------------|
 Weight| Feature weight   that represents the relative importance of each feature | $w$
 Points| Assigned points of each feature | $p$
 Normalized weight | Weights unit vector normalization | $${\hat{w}} = \frac{w_n}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}$$
-Lead score | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i}{p_i}$$
+Lead score | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i}$$
 
 ***
 
@@ -94,6 +94,12 @@ $$
 \hat{w_n} = \frac{w_n}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}
 $$
 
+In this way the sum of the squares of the normalized weights is equal to 1:
+
+$$
+\sum\limits^{n}_{i=0}{\hat{w}_i^2} = 1
+$$
+
 
 ### Points (${p}$):
 Assigned points per feature is the score assigned to each option of a feature. 50 shloud  assigned to the option that represents the minimum viable for the lead to be considered qualified.
@@ -107,7 +113,7 @@ Lead score is the sum of the normalized weight of each feature multiplied by the
 
 
 $$
-\lambda = \sum_{i=1}^n {\hat{w}_i}{p_i} = ({\hat{w}_1}{p_1})+({\hat{w}_2}{p_2})+({\hat{w}_3}{p_3})...({\hat{w}_n}{p_n})
+\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i} = ({\hat{w}_1^2}{p_1})+({\hat{w}_2^2}{p_2})+({\hat{w}_3^2}{p_3})...({\hat{w}_n^2}{p_n})
 $$
 
 ### Features ($f_1$,$f_2$,$f_3$ ... $f_n$)
