@@ -6,16 +6,6 @@ import math
 class NonPredictive(BaseModel):
     '''
     A non predictive lead scoring model.
-
-    Returns True if param1 is equal to param2's length.
-
-    Args:
-        features: List of features of the model
-        round_decimals: Number of decimals to round the lambda value, default is 2
-
-    Returns:
-        float: The computed lambda value, rounded to the number of decimals specified in the model
-
     '''
     features: conlist(Feature) = []
     round_decimals: int = 2
@@ -24,14 +14,7 @@ class NonPredictive(BaseModel):
         '''
         Adds a list of features to the model.
 
-        Must be of type Feature otherwise raises a TypeError.
-
-        Args:
-            features (List[Feature]): List of features to be added to the model
-
-        Raises:
-            TypeError: If features is not of type List[Feature]
-
+        All items must be of type Feature otherwise raises a TypeError.
         '''
         for feature in features:
             if not isinstance(feature, Feature):
@@ -39,18 +22,20 @@ class NonPredictive(BaseModel):
 
         self.features.extend(features)
 
+    def remove_features(self, features: List[str]):
+        '''
+        Removes a list of features from the model given their names.
+        '''
+
+        for i in range(len(features)):
+            for feature in self.features:
+                if feature.name == features[i]:
+                    self.features.remove(feature)
+
+
     def compute_lambda(self, lead: dict) -> float:
         '''
         Computes Lead score of a given lead.
-
-        Lead score is the dot product of the normalized weights and the points assigned to the labels of the features.
-
-        Args:
-            lead (dict): A dictionary containing feature names as keys and feature label as values.
-            Example: lead = {"feature_name": "label"},...}
-
-        Returns:
-            float: The computed lambda value, rounded to the number of decimals specified in the model
         '''
 
         self.compute_normalized_weights()

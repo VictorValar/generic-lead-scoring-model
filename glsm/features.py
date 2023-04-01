@@ -6,9 +6,6 @@ from typing import List, Tuple, Optional
 class Feature(BaseModel):
     '''
     A feature of a model.
-    @param name: Name of the feature
-    @param points_map: A list of tuples containing the label and the points assigned to the label (label, points). Example: [('label1', 1), ('label2', 2)]
-    @param weight: Weight of the feature
     '''
 
     name: str

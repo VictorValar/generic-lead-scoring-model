@@ -4,6 +4,7 @@ from glsm.features import Feature
 
 def test_is_instance_non_predictive(non_predictive_model):
     assert isinstance(non_predictive_model, NonPredictive)
+    assert non_predictive_model.features[0].name == "Monthly Users"
 
 def test_features_first_element_is_instance_Feature_class_istance(non_predictive_model):
     assert isinstance(non_predictive_model.features[0] , Feature)
@@ -60,4 +61,12 @@ def test_add_featues(non_predictive_model ):
 
     assert len(model.features) == 5
 
+
+def test_remove_features(non_predictive_model):
+    model = non_predictive_model
+
+    model.remove_features(["Monthly Users", "Industry"])
+
+    assert model.features[0].name == "Mkt Investment"
+    assert len(model.features) == 1
 
