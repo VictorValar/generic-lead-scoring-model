@@ -63,5 +63,26 @@ class NonPredictive(BaseModel):
         for feature in self.features:
             feature.normalized_weight = feature.weight / magnitude
 
+    def describe_features(self,):
+        '''
+        '''
+
+        description = {}
+
+        for feature in self.features:
+            description[feature.name] = {
+                "weight": feature.weight,
+                "normalized_weight": round(
+                    feature.normalized_weight,
+                    self.round_decimals
+                )
+            }
+
+        print(description)
+
+        return description
+
+
+
 
 

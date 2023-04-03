@@ -62,11 +62,29 @@ def test_add_featues(non_predictive_model ):
     assert len(model.features) == 5
 
 
-def test_remove_features(non_predictive_model):
+def test_should_remove_features(non_predictive_model):
     model = non_predictive_model
 
     model.remove_features(["Monthly Users", "Industry"])
 
     assert model.features[0].name == "Mkt Investment"
     assert len(model.features) == 1
+
+
+def test_should_return_features_description(non_predictive_model):
+    model = non_predictive_model
+
+    description = model.describe_features()
+
+    assert description == {
+        "Monthly Users": {
+            "weight": 0.5, "normalized_weight": 0.44
+        },
+        "Industry": {
+            "weight": 0.25, "normalized_weight": 0.22
+        },
+        "Mkt Investment": {
+            "weight": 1, "normalized_weight": 0.87
+        }
+    }
 
