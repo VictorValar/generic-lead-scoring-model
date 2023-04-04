@@ -49,7 +49,8 @@ Lead score | A weighted sum of assigned points for each feature, where the featu
 This library is in active development. Suggestions and contributions are welcome.
 ## Installation
 ### Requirements
--
+- pydantic
+
 Can be installed using pip:
 ```bash
 pip install glsm
