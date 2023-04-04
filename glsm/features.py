@@ -1,7 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import List, Tuple, Optional
-
-
+from typing import List, Tuple
 
 class Feature(BaseModel):
     '''
