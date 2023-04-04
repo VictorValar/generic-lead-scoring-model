@@ -46,7 +46,7 @@ Lead score | A weighted sum of assigned points for each feature, where the featu
 
 
 ## Disclaimer
-This library is in active development. Suggestions and contributions are welcome.
+This library is in beta. Suggestions and contributions are welcome.
 ## Installation
 ### Requirements
 - pydantic
