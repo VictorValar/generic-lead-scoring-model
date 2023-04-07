@@ -6,9 +6,11 @@ import math
 class NonPredictive(BaseModel):
     '''
     A non predictive lead scoring model.
+    Qualification threshold defauts to 50.
     '''
     features: conlist(Feature) = []
     round_decimals: int = 2
+    qualification_threshold: float = 50
 
     def add_features(self, features: List[Feature]):
         '''
@@ -67,6 +69,8 @@ class NonPredictive(BaseModel):
         '''
         '''
 
+        self.compute_normalized_weights()
+
         description = {}
 
         for feature in self.features:
@@ -81,6 +85,12 @@ class NonPredictive(BaseModel):
         print(description)
 
         return description
+
+    def assess_qualification(self, lead):
+        '''
+        Returns True if the lead equals of passes the qualification threshold for the model, False otherwise.
+        '''
+        return self.compute_lambda(lead) >= self.qualification_threshold
 
 
 

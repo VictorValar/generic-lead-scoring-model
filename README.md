@@ -268,5 +268,19 @@ with open('leads.csv', 'r') as file:
 lambda_value = model.compute_lambda(lead)
 ```
 
+### Checking if the lead is qualified
+The assess_qualification method returns True if the lead is qualified, False otherwise.
+
+The qualifcation_threshold is the minimum lambda value for a lead to be considered qualified. The default value is 50.
+
+```python
+model.assess_qualification(lead)
+```
+
+You can change the qualification threshold by:
+```python
+model.qualification_threshold = 90
+```
+
 
 

@@ -24,8 +24,7 @@ def test_sum_squares_normalized_weights(non_predictive_model):
     )
     assert weights_sqr_sum == 1
 
-def test_compute_lambda_equals_50 (non_predictive_model, lead):
-
+def test_compute_lambda_equals_81 (non_predictive_model, lead):
     model = non_predictive_model
     lambda_value = model.compute_lambda(lead)
 
@@ -88,3 +87,11 @@ def test_should_return_features_description(non_predictive_model):
         }
     }
 
+def test_qualification_assessement_shlud_return_true(non_predictive_model, lead):
+    model = non_predictive_model
+    assert model.assess_qualification(lead) == True
+
+def test_qualification_assessement_shlud_return_false(non_predictive_model, lead):
+    model = non_predictive_model
+    model.qualification_threshold = 90
+    assert model.assess_qualification(lead) == False
