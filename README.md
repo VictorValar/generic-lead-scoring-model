@@ -117,27 +117,41 @@ $$
 \sum\limits^{n}_{i=0}{\hat{w}_i^2} = 1
 $$
 
+### Qualificaton threshold($\theta$):
+The qualification threshold is the value that determines whether a lead is qualified or not. It is calculated as the midpoint of the range of points assigned to each feature.
+$$
+\theta = \text{points range}_{max} - \frac{\text{points range}_{max} - \text{points range}_{min}}{2}
+$$
+
+If the lead score $\geq \theta$ then the lead is qualified.
+
+Note that you can always change the qualification threshold to suit your needs. Since the defaut points range is 0 to 100, the default threshold is 50.
 
 ### Points ($p$):
 Points assined to each option of each feature. The points are assigned based on the desirability of each option. The points are then multiplied by the normalized weight of the feature to obtain the weighted points that are then summed to obtain the lead score.
 
->**NOTE:** These numbers are only a suggestion. You can use any set of values. The important thing is to be consistent.
+>**NOTE:** The numbers bewlow are only a suggestion. You can use any set of values. The important thing is to be consistent.
 
-The proposed points assiment framework is as follows:
+The proposed points assignment framework is as follows:
+1. Order the options from least desirable to most desirable.
 
-1. Determine the range of points for each feature: Define the minimum and maximum points for each feature. The minimum points should be assigned to the least desirable option, and the maximum points to the most desirable option. For instance, you could assign points on a scale of 0 to 100.
+2. Determine the range of points for each feature: Define the minimum and maximum points for each feature. The minimum points should be assigned to the least desirable option, and the maximum points to the most desirable option. For instance, you could assign points on a scale of 0 to 100.
 
-2. Define the ICP target range: For each feature, specify the target range that best represents the ICP. For example, the target range for feature A is 50k to 100k monthly users.
+3. Determine if the feature is numeric or categorical.
+    - **If defining from numeric variables:**
+    Specify the target ranges that best represents the ICP.
+    For example, in a feature called "Monthly users", the ICP range could be "50k to 100k"
 
-3. Determine the ICP option: Identify the option that falls within the ICP target range. In this case, let's say it's option A2.
+    - **If defining from categorical variables:**
+        Identify the options that best represent the ICP. For example, in a feature called "Industry", the ICP options could be "Retail" and "Telecom".
 
-4. Assign points to the ICP option: Assign the qualification threshold points (suppose 50 points in this case) to the ICP option (A2).
+5. Assign points to the ICP option: Assign the qualification threshold points (suppose 50 points in this case) to the ICP option(s).
 
-5. Divide the remaining points range into equal intervals: For options less desirable than the ICP option, divide the range from the minimum points to the qualification threshold points (0 to 50) into equal intervals. For options more desirable than the ICP option, divide the range from the qualification threshold points to the maximum points (50 to 100) into equal intervals.
+6. Divide the remaining points range into equal intervals: For options less desirable than the ICP option, divide the range from the minimum points to the qualification threshold points (0 to 50) into equal intervals. For options more desirable than the ICP option, divide the range from the qualification threshold points to the maximum points (50 to 100) into equal intervals.
     - For options less desirable than A2 (A1): Divide the range 0 to 50 into equal intervals (0 to 50, one interval of 50 points).
     - For options more desirable than A2 (A3 and A4): Divide the range 50 to 100 into equal intervals (50 to 100, two intervals of 25 points each).
 
-6. Assign points to the other options based on their position in the intervals: Assign points to each option based on the position of that option within the equal intervals.
+7. Assign points to the other options based on their position in the intervals: Assign points to each option based on the position of that option within the equal intervals.
     - A1: 0 points (minimum)
     - A2: 50 points (ICP option)
     - A3: 75 points
@@ -152,10 +166,22 @@ The proposed points assiment framework is as follows:
     - A3: 75 points
     - A4: 100 points (maximum)
 
-#### Definitions:
-- **ICP**: Ideal Customer Profile
-- **ICP target range**: The range of values that best represents the ICP
-- **ICP option**: The option that falls within the ICP target range
+
+Note that more than one target range can be defined for each feature as seen below.
+Use your best judgement to determine the target ranges and how many options to include before and after the ICP options.
+
+| Industry | Points| Calculation
+|------------ | ------------ | ------------|
+Other | 0 | 50 - 50/5*5
+Agriculture | 10 | 50 - 50/5*4
+Transportation | 20 | 50 - 50/5*3
+Healthcare | 30 | 50 - 50/5*2
+Manufacturing | 40 | 50 - 50/5
+Education | 50 | qualification_threshold
+Finance | 50 | qualification_threshold
+Technology | 50 | qualification_threshold
+Retail | 75 | 50 + 50/2
+Telecom | 100 | 50 + 50/2*2
 
 
 ### Lead Score ($\lambda$):
@@ -269,18 +295,14 @@ lambda_value = model.compute_lambda(lead)
 ```
 
 ### Checking if the lead is qualified
-The assess_qualification method returns True if the lead is qualified, False otherwise.
-
-The qualifcation_threshold is the minimum lambda value for a lead to be considered qualified. The default value is 50.
+The assess_qualification() method returns True if the lead is qualified, False otherwise.
 
 ```python
-model.assess_qualification(lead)
+model.assess_qualification(lead) # True/False
 ```
 
-You can change the qualification threshold by:
-```python
-model.qualification_threshold = 90
-```
+
+
 
 
 

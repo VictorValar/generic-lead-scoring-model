@@ -1,5 +1,5 @@
 from pydantic import BaseModel, conlist
-from typing import List
+from typing import List, Tuple
 from glsm.features import Feature
 import math
 
@@ -11,6 +11,7 @@ class NonPredictive(BaseModel):
     features: conlist(Feature) = []
     round_decimals: int = 2
     qualification_threshold: float = 50
+    points_range: Tuple[float,float] = (0,100)
 
     def add_features(self, features: List[Feature]):
         '''
@@ -65,8 +66,26 @@ class NonPredictive(BaseModel):
         for feature in self.features:
             feature.normalized_weight = feature.weight / magnitude
 
+    def compute_qualification_threshold(self,):
+        '''
+        Computes and returns the qualification threshold based on the points range set for the model.
+        '''
+
+        points_min = self.points_range[0]
+        points_max = self.points_range[1]
+
+        try:
+            theta = points_max - (points_max - points_min) / 2
+        except TypeError as exc:
+            raise TypeError("Points range must be a tuple of two numeric types") from exc
+
+        self.qualification_threshold = theta
+
+        return theta
+
     def describe_features(self,):
         '''
+        Returns a dictionary with the features of the model and their weights.
         '''
 
         self.compute_normalized_weights()

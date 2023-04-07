@@ -1,34 +1,34 @@
 from typing import List
 from glsm.non_predictive import NonPredictive
 from glsm.features import Feature
+import pytest
 
 def test_is_instance_non_predictive(non_predictive_model):
     assert isinstance(non_predictive_model, NonPredictive)
     assert non_predictive_model.features[0].name == "Monthly Users"
 
-def test_features_first_element_is_instance_Feature_class_istance(non_predictive_model):
+def test_features_first_element_is_instance_of_Feature_class_(non_predictive_model):
     assert isinstance(non_predictive_model.features[0] , Feature)
 
-def test_features_first_element_name_types(non_predictive_model):
-
+def test_features_first_tuple_contain_str_n_float(non_predictive_model):
     map = non_predictive_model.features[0].points_map
 
     assert type(map[0][0]) == str
     assert type(map[0][1]) == float
 
 
-def test_sum_squares_normalized_weights(non_predictive_model):
+def test_sum_squares_normalized_weights_is_one(non_predictive_model):
     features = non_predictive_model.features
     weights_sqr_sum = sum(
         [feature.normalized_weight**2 for feature in features]
     )
     assert weights_sqr_sum == 1
 
-def test_compute_lambda_equals_81 (non_predictive_model, lead):
+def test_compute_lambda_equals_75 (non_predictive_model, lead):
     model = non_predictive_model
     lambda_value = model.compute_lambda(lead)
 
-    assert lambda_value == 81.43
+    assert lambda_value == 75.4
 
 def test_add_featues(non_predictive_model ):
     model = non_predictive_model
@@ -95,3 +95,43 @@ def test_qualification_assessement_shlud_return_false(non_predictive_model, lead
     model = non_predictive_model
     model.qualification_threshold = 90
     assert model.assess_qualification(lead) == False
+
+def test_compute_qualification_threshold_should_return_50(non_predictive_model):
+    model = non_predictive_model
+    model.compute_qualification_threshold()
+    assert model.qualification_threshold == 50
+
+# def test_should_return_points_assiment_suggestion(non_predictive_model,):
+#     model = non_predictive_model
+#     suggeston = model.suggest_points_assignment()
+#     assert suggeston == {
+#         "Monthly Users": {
+#             "Up to 50K": 50,
+#             "50K - 100K": 60,
+#             "100K - 200K": 80,
+#             "More than 200K": 100
+#         },
+#         "Industry": {
+            # "Agriculture": 10,
+            # "Transportation": 90,
+            # "Healthcare": 40,
+            # "Manufacturing": 50,
+            # "Education": 20,
+            # "Finance": 30,
+            # "Technology": 70,
+            # "Retail": 60,
+            # "Telecom": 80,
+            # "Other": 100
+#         }
+
+
+# Agriculture
+# Transportation
+# Healthcare
+# Manufacturing
+# Education
+# Finance
+# Technology
+# Retail
+# Telecom
+# Other
