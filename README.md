@@ -119,40 +119,76 @@ $$
 
 
 ### Points ($p$):
-Assigned points per feature.The score assigned to each option of a feature. 50 shloud  assigned to the option that represents your ICP.
+Points assined to each option of each feature. The points are assigned based on the desirability of each option. The points are then multiplied by the normalized weight of the feature to obtain the weighted points that are then summed to obtain the lead score.
 
+>**NOTE:** These numbers are only a suggestion. You can use any set of values. The important thing is to be consistent.
 
+The proposed points assiment framework is as follows:
 
-These numbers are only a suggestion. You can use any range of values, but it is easier to interpret if the points are $0  \leq p \geq 100$ and 50 is the ICP.
+1. Determine the range of points for each feature: Define the minimum and maximum points for each feature. The minimum points should be assigned to the least desirable option, and the maximum points to the most desirable option. For instance, you could assign points on a scale of 0 to 100.
+
+2. Define the ICP target range: For each feature, specify the target range that best represents the ICP. For example, the target range for feature A is 50k to 100k monthly users.
+
+3. Determine the ICP option: Identify the option that falls within the ICP target range. In this case, let's say it's option A2.
+
+4. Assign points to the ICP option: Assign the qualification threshold points (suppose 50 points in this case) to the ICP option (A2).
+
+5. Divide the remaining points range into equal intervals: For options less desirable than the ICP option, divide the range from the minimum points to the qualification threshold points (0 to 50) into equal intervals. For options more desirable than the ICP option, divide the range from the qualification threshold points to the maximum points (50 to 100) into equal intervals.
+    - For options less desirable than A2 (A1): Divide the range 0 to 50 into equal intervals (0 to 50, one interval of 50 points).
+    - For options more desirable than A2 (A3 and A4): Divide the range 50 to 100 into equal intervals (50 to 100, two intervals of 25 points each).
+
+6. Assign points to the other options based on their position in the intervals: Assign points to each option based on the position of that option within the equal intervals.
+    - A1: 0 points (minimum)
+    - A2: 50 points (ICP option)
+    - A3: 75 points
+    - A4: 100 points (maximum)
+
+    If none of the options seem to be a good fit for assigning 0 points, you can introduce a new baseline option that represents the least desirable criteria. This baseline option will be assigned 0 points, and the other options will be assigned points accordingly.
+
+    The options for feature A would now be: A0, A1, A2, A3, and A4, with A0 being the new baseline option. The points assignment will now follow the same steps as before, but with A0 receiving 0 points:
+    - A0: 0 points (minimum)
+    - A1: 25 points
+    - A2: 50 points (ICP option)
+    - A3: 75 points
+    - A4: 100 points (maximum)
+
+#### Definitions:
+- **ICP**: Ideal Customer Profile
+- **ICP target range**: The range of values that best represents the ICP
+- **ICP option**: The option that falls within the ICP target range
+
 
 ### Lead Score ($\lambda$):
 Lead score is the sum of squares the normalized weights of each feature multiplied by the points assined to each feature.
-
 
 $$
 \lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i} = ({\hat{w}_1^2}{p_1})+({\hat{w}_2^2}{p_2})+({\hat{w}_3^2}{p_3})...({\hat{w}_n^2}{p_n})
 $$
 
+The higher the lead score, the more desirable the lead is. The lead score is then compared to the qualification threshold to determine if the lead is qualified or not.
+
+Lead score can be used to rank and prioritize leads, and to create audiences based on the lead score on platforms such as Google Analytics, Facebook Ads, etc.
+
 ### Features ($f_n$)
 Features are a set of characteristics assigned to each lead. If you have difficulties finding out which features to add, start by adding relevant lead form or CRM fields as features.
 
-Each feature has points associated with it, which are assigned to each option of the feature. The points assigned to each option are relative to the minimum viable option for the lead to be considered qualified (50 points).
+Each feature has points associated with it, which are assigned to each option of the feature. The points assigned to each option are relative to the qualification threshold. The higher the points, the more desirable the option.
+
+Each feature has a weight associated with it, which is used to differentiate the importance of each feature. The higher the weight, the more important the feature is.
+
+A feature have several options, each of which represent a range of values. For example, the feature "Monthly Website Users" has the following options:
+
+| Monthly Website Users | Points|
+|------------ | ------------|
+Up to 50k | 0
+50k - 100k | 50 (ICP)
+100k - 200k | 75
+More than 200k | 100
 
 You should first define the features and their options, then assign 50 points to the minimum viable option for the lead to be considered qualified. The remaining points should be distributed among the other options in a way that reflects the relative importance of each option.
 
-In this way if $\lambda \geq 50$ the lead is considered qualified.
-
 Remember that this is a suggestion, you can assign the points as you see fit and as your business requires. You may want to use negative points to penalize leads that do not meet certain criteria for example. It is generally easier to work with positive points, but it is up to you.
 
-#### Example:
-| Monthly Website Users | Points|
-|------------ | ------------|
-Up to 50k | 30
-50k - 100k | 50 (ICP)
-100k - 200k | 80
-More than 200k | 100
-
-***
 
 
 # Usage
