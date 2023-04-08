@@ -1,6 +1,6 @@
 from pytest import fixture
-from glsm.non_predictive import NonPredictive
-from glsm.features import Feature
+from glsm.non_predictive.model import NonPredictive
+from glsm.non_predictive.features import Feature
 
 @fixture
 def non_predictive_model() -> NonPredictive:
@@ -62,7 +62,7 @@ def lead():
     Yields a lead
     '''
 
-    lead = { # lambda = 81.43
+    lead = { 
         "Monthly Users": "50K - 100K",
         "Industry": "Technology",
         "Mkt Investment": "$300K - $400K",

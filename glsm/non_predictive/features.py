@@ -33,7 +33,7 @@ class Feature(BaseModel):
         for item in self.points_map:
             if item[0] == label:
                 return item[1]
-        return None
+        raise ValueError(f'Label {label} not found in points map')
 
 
 

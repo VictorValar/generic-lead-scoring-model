@@ -1,12 +1,11 @@
 from pydantic import BaseModel, conlist
 from typing import List, Tuple
-from glsm.features import Feature
+from glsm.non_predictive.features import Feature
 import math
 
 class NonPredictive(BaseModel):
     '''
     A non predictive lead scoring model.
-    Qualification threshold defauts to 50.
     '''
     features: conlist(Feature) = []
     round_decimals: int = 2
@@ -45,7 +44,8 @@ class NonPredictive(BaseModel):
 
         lambda_value = sum(
             [
-                (feature.normalized_weight**2) * feature.get_points(lead[feature.name])
+                (feature.normalized_weight**2) * feature.get_points(
+                    lead[feature.name])
                 for feature in self.features
             ]
         )
@@ -100,8 +100,8 @@ class NonPredictive(BaseModel):
                     self.round_decimals
                 )
             }
+            print(description)
 
-        print(description)
 
         return description
 

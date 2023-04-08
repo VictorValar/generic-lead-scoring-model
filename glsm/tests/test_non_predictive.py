@@ -1,7 +1,6 @@
 from typing import List
-from glsm.non_predictive import NonPredictive
-from glsm.features import Feature
-import pytest
+from glsm.non_predictive.model import NonPredictive
+from glsm.non_predictive.features import Feature
 
 def test_is_instance_non_predictive(non_predictive_model):
     assert isinstance(non_predictive_model, NonPredictive)
