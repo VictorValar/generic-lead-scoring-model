@@ -31,9 +31,10 @@ Lead score | A weighted sum of assigned points for each feature, where the featu
             1. [Unit vector nomalization:](#unit-vector-nomalization)
             2. [Feature weights vector magnitude:](#feature-weights-vector-magnitude)
             3. [Normalized weight vector:](#normalized-weight-vector)
-        3. [Points:](#points-p)
-        4. [Lead Score:](#lead-score-lambda)
-        5. [Features]( #features-fn)
+        3. [Qualificaton threshold](#qualificaton-threshold)
+        4. [Points:](#points-p)
+        5. [Lead Score:](#lead-score-lambda)
+        6. [Features]( #features-fn)
 5. [Usage](#usage)
     1. [Predictive Model](#predictive-model-2)
     2. [Non-predictive Model](#non-predictive-model-2)
@@ -117,8 +118,9 @@ $$
 \sum\limits^{n}_{i=0}{\hat{w}_i^2} = 1
 $$
 
-### Qualificaton threshold($\theta$):
+### Qualificaton threshold:
 The qualification threshold is the value that determines whether a lead is qualified or not. It is calculated as the midpoint of the range of points assigned to each feature.
+
 $$
 \theta = \text{points range}_{max} - \frac{\text{points range}_{max} - \text{points range}_{min}}{2}
 $$
@@ -145,13 +147,15 @@ The proposed points assignment framework is as follows:
     - **If defining from categorical variables:**
         Identify the options that best represent the ICP. For example, in a feature called "Industry", the ICP options could be "Retail" and "Telecom".
 
-5. Assign points to the ICP option: Assign the qualification threshold points (suppose 50 points in this case) to the ICP option(s).
+4. Assign points to the ICP option: Assign the qualification threshold points (suppose 50 points in this case) to the ICP option(s).
 
-6. Divide the remaining points range into equal intervals: For options less desirable than the ICP option, divide the range from the minimum points to the qualification threshold points (0 to 50) into equal intervals. For options more desirable than the ICP option, divide the range from the qualification threshold points to the maximum points (50 to 100) into equal intervals.
+5. Divide the remaining points range into equal intervals: For options less desirable than the ICP option, divide the range from the minimum points to the qualification threshold points (0 to 50) into equal intervals. For options more desirable than the ICP option, divide the range from the qualification threshold points to the maximum points (50 to 100) into equal intervals.
+
+    Suppose a feature A has 4 options: A1, A2, A3, A4. The ICP option is A2:
     - For options less desirable than A2 (A1): Divide the range 0 to 50 into equal intervals (0 to 50, one interval of 50 points).
     - For options more desirable than A2 (A3 and A4): Divide the range 50 to 100 into equal intervals (50 to 100, two intervals of 25 points each).
 
-7. Assign points to the other options based on their position in the intervals: Assign points to each option based on the position of that option within the equal intervals.
+6. Assign points to the other options based on their position in the intervals: Assign points to each option based on the position of that option within the equal intervals.
     - A1: 0 points (minimum)
     - A2: 50 points (ICP option)
     - A3: 75 points
@@ -167,21 +171,22 @@ The proposed points assignment framework is as follows:
     - A4: 100 points (maximum)
 
 
-Note that more than one target range can be defined for each feature as seen below.
-Use your best judgement to determine the target ranges and how many options to include before and after the ICP options.
 
+Use your best judgement and domain knowledge or historical data that suggests a certain lead score is more indicative of a qualified lead to determine the target ranges and how many options to include before and after the ICP options.
+
+Note that more than one ICP option can be defined for each feature as seen below:
 | Industry | Points| Calculation
 |------------ | ------------ | ------------|
-Other | 0 | 50 - 50/5*5
-Agriculture | 10 | 50 - 50/5*4
-Transportation | 20 | 50 - 50/5*3
-Healthcare | 30 | 50 - 50/5*2
-Manufacturing | 40 | 50 - 50/5
+Other | 0 | 50 - (50/5)*5
+Agriculture | 10 | 50 - (50/5)*4
+Transportation | 20 | 50 - (50/5)*3
+Healthcare | 30 | 50 - (50/5)*2
+Manufacturing | 40 | 50 - (50/5)
 Education | 50 | qualification_threshold
 Finance | 50 | qualification_threshold
 Technology | 50 | qualification_threshold
 Retail | 75 | 50 + 50/2
-Telecom | 100 | 50 + 50/2*2
+Telecom | 100 | 50 + (50/2)*2
 
 
 ### Lead Score ($\lambda$):
@@ -214,7 +219,6 @@ More than 200k | 100
 You should first define the features and their options, then assign 50 points to the minimum viable option for the lead to be considered qualified. The remaining points should be distributed among the other options in a way that reflects the relative importance of each option.
 
 Remember that this is a suggestion, you can assign the points as you see fit and as your business requires. You may want to use negative points to penalize leads that do not meet certain criteria for example. It is generally easier to work with positive points, but it is up to you.
-
 
 
 # Usage
