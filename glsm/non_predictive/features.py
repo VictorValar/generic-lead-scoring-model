@@ -19,12 +19,19 @@ class Feature(BaseModel):
 
     @validator('points_map', each_item=True)
     def validate_points_map(cls, points_map):
-        label, points = points_map
+
+        try:
+            label, points = points_map
+        except ValueError as exc:
+            # check err message to see if it's the right error keyword: unpack
+            if 'not enough values to unpack (expected 2, got 1)' in str(exc):
+                label = points_map[0]
+                points = 0
 
         try:
             return [label, float(points)]
         except ValueError as exc:
-            raise ValueError('Each item of Points map should be a list of a string and a numeric value') from exc
+            raise ValueError('Each item of Points map should be: [string, numeric value]') from exc
 
     def get_points(self, label: str) -> float:
         '''

@@ -87,6 +87,14 @@ def test_compute_qualification_threshold_should_return_50(non_predictive_model):
     model.compute_qualification_threshold()
     assert model.qualification_threshold == 50
 
+def test_compute_normalized_weights(non_predictive_model):
+    model = non_predictive_model
+    model.compute_normalized_weights()
+    assert round(
+        model.features[0].normalized_weight,
+        model.round_decimals
+    ) == 0.44
+
 # def test_should_return_points_assiment_suggestion(non_predictive_model,):
 #     model = non_predictive_model
 #     suggeston = model.suggest_points_assignment()

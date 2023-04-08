@@ -71,18 +71,29 @@ def lead():
     yield lead
 
 @fixture
-def feature_instance():
-    feature = Feature(
+def feature_instances():
+    feature_a = Feature(
         name="Monthly Users",
         weight=0.5,
         points_map=[
-            ["Up to 50K", 0],
+            ["Up to 50K",0],
             ["50K - 100K", 50],
             ["100K - 200K", 75],
             ["More than 200K", 100],
         ]
     )
-    yield feature
+
+    feature_b = Feature(
+        name="Industry",
+        weight=0.25,
+        points_map=[
+            ["Other"],
+            ["Agriculture", ],
+            ["Transportation",]
+        ]
+    )
+
+    yield feature_a, feature_b
 
 
 
