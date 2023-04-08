@@ -62,12 +62,27 @@ def lead():
     Yields a lead
     '''
 
-    lead = { 
+    lead = {
         "Monthly Users": "50K - 100K",
         "Industry": "Technology",
         "Mkt Investment": "$300K - $400K",
     }
 
     yield lead
+
+@fixture
+def feature_instance():
+    feature = Feature(
+        name="Monthly Users",
+        weight=0.5,
+        points_map=[
+            ["Up to 50K", 0],
+            ["50K - 100K", 50],
+            ["100K - 200K", 75],
+            ["More than 200K", 100],
+        ]
+    )
+    yield feature
+
 
 

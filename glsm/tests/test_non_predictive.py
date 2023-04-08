@@ -1,20 +1,9 @@
-from typing import List
 from glsm.non_predictive.model import NonPredictive
 from glsm.non_predictive.features import Feature
 
-def test_is_instance_non_predictive(non_predictive_model):
+def test_non_predictive_instance(non_predictive_model):
     assert isinstance(non_predictive_model, NonPredictive)
     assert non_predictive_model.features[0].name == "Monthly Users"
-
-def test_features_first_element_is_instance_of_Feature_class_(non_predictive_model):
-    assert isinstance(non_predictive_model.features[0] , Feature)
-
-def test_features_first_tuple_contain_str_n_float(non_predictive_model):
-    map = non_predictive_model.features[0].points_map
-
-    assert type(map[0][0]) == str
-    assert type(map[0][1]) == float
-
 
 def test_sum_squares_normalized_weights_is_one(non_predictive_model):
     features = non_predictive_model.features
@@ -59,17 +48,7 @@ def test_add_featues(non_predictive_model ):
 
     assert len(model.features) == 5
 
-
-def test_should_remove_features(non_predictive_model):
-    model = non_predictive_model
-
-    model.remove_features(["Monthly Users", "Industry"])
-
-    assert model.features[0].name == "Mkt Investment"
-    assert len(model.features) == 1
-
-
-def test_should_return_features_description(non_predictive_model):
+def test_describe_features(non_predictive_model):
     model = non_predictive_model
 
     description = model.describe_features()
@@ -86,11 +65,19 @@ def test_should_return_features_description(non_predictive_model):
         }
     }
 
-def test_qualification_assessement_shlud_return_true(non_predictive_model, lead):
+def test_should_remove_features(non_predictive_model):
+    model = non_predictive_model
+
+    model.remove_features(["Monthly Users", "Industry"])
+
+    assert model.features[0].name == "Mkt Investment"
+    assert len(model.features) == 1
+
+def test_qualification_assessement_true(non_predictive_model, lead):
     model = non_predictive_model
     assert model.assess_qualification(lead) == True
 
-def test_qualification_assessement_shlud_return_false(non_predictive_model, lead):
+def test_qualification_assessement_false(non_predictive_model, lead):
     model = non_predictive_model
     model.qualification_threshold = 90
     assert model.assess_qualification(lead) == False
