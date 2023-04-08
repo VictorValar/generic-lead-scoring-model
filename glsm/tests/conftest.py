@@ -13,10 +13,10 @@ def non_predictive_model() -> NonPredictive:
         name="Monthly Users",
         weight=0.5,
         points_map=[
-            ("Up to 50K",0),
-            ("50K - 100K",50),
-            ("100K - 200K",75),
-            ("More than 200K",100),
+            ["Up to 50K",0],
+            ["50K - 100K",50],
+            ["100K - 200K",75],
+            ["More than 200K",100],
         ]
     )
 
@@ -24,16 +24,16 @@ def non_predictive_model() -> NonPredictive:
         name="Industry",
         weight=0.25,
         points_map=[
-            ("Other",50 - 50/5*5),
-            ("Agriculture",50 - 50/5*4),
-            ("Transportation",50 - 50/5*3),
-            ("Healthcare",50 - 50/5*2),
-            ("Manufacturing",50 - 50/5),
-            ("Education",50),
-            ("Finance",50),
-            ("Technology",50),
-            ("Retail",75),
-            ("Telecom",100),
+            ["Other",50 - (50/5)*5],
+            ["Agriculture",50 - (50/5)*4],
+            ["Transportation",50 - (50/5)*3],
+            ["Healthcare",50 - (50/5)*2],
+            ["Manufacturing",50 - (50/5)],
+            ["Education",50],
+            ["Finance",50],
+            ["Technology",50],
+            ["Retail",75],
+            ["Telecom",100],
         ]
 
     )
@@ -42,12 +42,12 @@ def non_predictive_model() -> NonPredictive:
         name="Mkt Investment",
         weight=1,
         points_map=[
-            ("Up to $50K",50-50/2*2),
-            ("50k - $100K",50-50/2),
-            ("100k - $200K",50),
-            ("$200K - $300K",50 + 50/3),
-            ("$300K - $400K",50 + 50/3*2),
-            ("More than $400K",50 + 50/3*3),
+            ["Up to $50K",50-(50/2)*2],
+            ["50k - $100K",50-(50/2)],
+            ["100k - $200K",50],
+            ["$200K - $300K",50 + (50/3)],
+            ["$300K - $400K",50 + (50/3)*2],
+            ["More than $400K",50 + (50/3)*3],
         ]
     )
     model.add_features([feature_a, feature_b, feature_c])

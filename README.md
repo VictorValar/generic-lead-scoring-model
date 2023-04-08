@@ -240,32 +240,35 @@ feature_a = Feature(
     name="Monthly Users",
     weight=0.5,
     points_map=[
-        ("Up to 50K",00),
-        ("50K - 100K",50),
-        ("100K - 200K",70),
-        ("More than 200K",100),
+        ["Up to 50K",0],
+        ["50K - 100K",50],
+        ["100K - 200K",75],
+        ["More than 200K",100],
     ]
 )
-
 feature_b = Feature(
     name="Industry",
     weight=0.25,
     points_map=[
-        ("Technology",70),
-        ("Real State",20),
-        ("Retail",50),
-        ("Education",50),
-        ("Health",100),
+        ["Other",50 - (50/5)*5], # 0
+        ["Agriculture",50 - (50/5)*4],
+        ["Transportation",50 - (50/5)*3],
+        ["Healthcare",50 - (50/5)*2],
+        ["Manufacturing",50 - (50/5)],
+        ["Education",50],
+        ["Finance",50],
+        ["Technology",50],
+        ["Retail",50 + (50/2)],
+        ["Telecom",50 + (50/2)*2], # 100
     ]
 )
-
 model.add_features([feature_a, feature_b])
 ```
 
 ### Importing lead data
 #### From a dictionary
 ```python
-lead = { # lambda = 81.43
+lead = {
         "Monthly Users": "50K - 100K",
         "Industry": "Technology",
         "Mkt Investment": "$300K - $400K",
@@ -299,7 +302,7 @@ lambda_value = model.compute_lambda(lead)
 ```
 
 ### Checking if the lead is qualified
-The assess_qualification() method returns True if the lead is qualified, False otherwise.
+The assess_qualification() method returns True if the lead is qualified ($\lambda \geq \theta$), False otherwise.
 
 ```python
 model.assess_qualification(lead) # True/False
