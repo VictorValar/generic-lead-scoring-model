@@ -59,6 +59,7 @@ This library is in beta. Suggestions and contributions are welcome.
 ### Requirements
 
 - pydantic
+- pandas
 
 Can be installed using pip:
 
