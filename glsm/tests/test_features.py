@@ -26,4 +26,3 @@ def test_features_first_element_types(feature_instances):
 
 def test_get_points(feature_instances):
     assert feature_instances[0].get_points("Up to 50K") == 0
-

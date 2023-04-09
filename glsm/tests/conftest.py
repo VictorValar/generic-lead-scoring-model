@@ -46,7 +46,7 @@ def non_predictive_model() -> NonPredictive:
             ["50k - $100K",50-(50/2)],
             ["100k - $200K",50],
             ["$200K - $300K",50 + (50/3)],
-            ["$300K - $400K",50 + (50/3)*2],
+            ["$300K - $400K",50 + (50/3)*2], # 83.33333333333334
             ["More than $400K",50 + (50/3)*3],
         ]
     )
@@ -88,12 +88,10 @@ def feature_instances():
         weight=0.25,
         points_map=[
             ["Other"],
-            ["Agriculture", ],
-            ["Transportation",]
+            ["Agriculture"],
+            ["Transportation"]
         ]
     )
 
     yield feature_a, feature_b
-
-
 
