@@ -7,7 +7,7 @@ import pandas as pd
 @fixture
 def non_predictive_model() -> NonPredictive:
     """
-    Yields a NonPredictive() model with three features
+    Yields a NonPredictive() model with three features_names
     """
     model = NonPredictive()
 
@@ -89,14 +89,11 @@ def lead():
     """
     Yields a lead
     """
-
-    lead = {
+    yield {
         "Monthly Users": "50K - 100K",
         "Industry": "Technology",
         "Mkt Investment": "$300K - $400K",
     }
-
-    yield lead
 
 
 @fixture

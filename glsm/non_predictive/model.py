@@ -15,7 +15,7 @@ class NonPredictive(BaseModel):
 
     def add_features(self, features: List[Feature]):
         """
-        Adds a list of features to the model.
+        Adds a list of features_names to the model.
 
         All items must be of type Feature otherwise raises a TypeError.
         """
@@ -25,14 +25,14 @@ class NonPredictive(BaseModel):
 
         self.features.extend(features)
 
-    def remove_features(self, features: List[str]):
+    def remove_features(self, features_names: List[str]):
         """
-        Removes a list of features from the model given their names.
+        Removes a list of features_names from the model given their names.
         """
 
-        for i in range(len(features)):
+        for name in features_names:
             for feature in self.features:
-                if feature.name == features[i]:
+                if feature.name == name:
                     self.features.remove(feature)
 
     def compute_lambda(self, lead: dict) -> float:
@@ -43,25 +43,20 @@ class NonPredictive(BaseModel):
         self.compute_normalized_weights()
 
         lambda_value = sum(
-            [
-                (feature.normalized_weight ** 2) * feature.get_points(
-                    lead[feature.name])
-                for feature in self.features
-            ]
+            (feature.normalized_weight**2) * feature.get_points(lead[feature.name])
+            for feature in self.features
         )
 
         return round(lambda_value, self.round_decimals)
 
     def compute_normalized_weights(self):
         """
-        Computes the normalized weights of the model features.
+        Computes the normalized weights of the model features_names.
 
-        The normalized weight of a feature is the weight of the feature divided by the magnitude of the weights of all the features.
+        The normalized weight of a feature is the weight of the feature divided by the magnitude of the weights of all the features_names.
         """
 
-        magnitude = math.sqrt(
-            sum([feature.weight ** 2 for feature in self.features])
-        )
+        magnitude = math.sqrt(sum(feature.weight ** 2 for feature in self.features))
 
         for feature in self.features:
             feature.normalized_weight = feature.weight / magnitude
@@ -85,7 +80,7 @@ class NonPredictive(BaseModel):
 
     def describe_features(self, ):
         """
-        Returns a dictionary with the features of the model and their weights.
+        Returns a dictionary with the features_names of the model and their weights.
         """
 
         self.compute_normalized_weights()
@@ -112,7 +107,7 @@ class NonPredictive(BaseModel):
 
     def auto_assign_points(self, ):
         """
-        Automatically assigns points to the features of the model.
+        Automatically assigns points to the features_names of the model.
         """
 
         pass

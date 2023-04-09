@@ -12,12 +12,12 @@ Soon!
 
 ### Non-predictive Model
 
-| Name              | Description                                                                                                         | Variable                                                    |
-|-------------------|---------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| Weight            | Feature weight   that represents the relative importance of each feature                                            | $$ w$$                                                      |
-| Points            | Assigned points of each feature                                                                                     | $$ p$$                                                      |
+| Name              | Description                                                                                                         | Variable                                                  |
+|-------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Weight            | Feature weight   that represents the relative importance of each feature                                            | $$w$$                                                     |
+| Points            | Assigned points of each feature                                                                                     | $$p$$                                                     |
 | Normalized weight | Weights unit vector normalization                                                                                   | $${\hat{w}} = \frac{w}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}$$ |
-| Lead score        | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i}$$               |
+| Lead score        | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i}$$             |
 
 ---
 

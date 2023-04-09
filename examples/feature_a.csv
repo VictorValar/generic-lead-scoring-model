@@ -1,0 +1,11 @@
+label,is_ICP,points
+Other,False,0
+Agriculture,False,0
+Transportation,False,0
+Healthcare,False,0
+Manufacturing,False,0
+Education,True,0
+Finance,True,0
+Technology,True,0
+Retail,False,0
+Telecom,False, 0

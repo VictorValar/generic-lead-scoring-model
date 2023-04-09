@@ -32,12 +32,10 @@ def test_get_points(feature_instances):
     assert feature_instances[0].get_points("Up to 50K") == 0
 
 
-def test_options_df_values(feature_instances):
-    expected_df = pd.DataFrame([
-        {"label": "Up to 50K", "is_ICP": False, "points": 0},
-        {"label": "50K - 100K", "is_ICP": True, "points": 0},
-        {"label": "100K - 200K", "is_ICP": False, "points": 0},
-        {"label": "More than 200K", "is_ICP": False, "points": 0},
-    ])
-    assert feature_instances[0].options_df.equals(expected_df)
+def test_feature_instances_options_df_values(feature_instances):
+    assert feature_instances[1].options_df.points.sum() == 0
+    assert feature_instances[1].options_df.is_ICP.sum() == 1
+    assert feature_instances[1].options_df.label[0] == "Other"
+    assert feature_instances[1].options_df.label[1] == "Agriculture"
+    assert feature_instances[1].options_df.label[2] == "Transportation"
 

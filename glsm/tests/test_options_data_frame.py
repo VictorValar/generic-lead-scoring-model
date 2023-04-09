@@ -1,4 +1,4 @@
-from glsm.non_predictive.features import OptionsDataFrame
+from glsm.non_predictive.features import _OptionsDataFrame
 import pytest
 from pydantic import ValidationError
 
@@ -9,13 +9,13 @@ def test_options_data_frame_instance(options_data_frame_instances):
     options_df_fail_missing_field = options_data_frame_instances[2]
 
     # Pass
-    # Convert each row of the DataFrame to a dictionary and create OptionsDataFrame instances
-    [OptionsDataFrame(**row._asdict()) for row in options_df_pass.itertuples(index=False)]
+    # Convert each row of the DataFrame to a dictionary and create _OptionsDataFrame instances
+    [_OptionsDataFrame(**row._asdict()) for row in options_df_pass.itertuples(index=False)]
 
     # Fail values
     with pytest.raises(ValidationError):
-        [OptionsDataFrame(**row._asdict()) for row in options_df_fail_values.itertuples(index=False)]
+        [_OptionsDataFrame(**row._asdict()) for row in options_df_fail_values.itertuples(index=False)]
 
     # Fail missing field
     with pytest.raises(ValidationError):
-        [OptionsDataFrame(**row._asdict()) for row in options_df_fail_missing_field.itertuples(index=False)]
+        [_OptionsDataFrame(**row._asdict()) for row in options_df_fail_missing_field.itertuples(index=False)]

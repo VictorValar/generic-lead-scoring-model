@@ -1,9 +1,9 @@
 from pydantic import BaseModel, validator, conlist
-from typing import List, Union, Optional
+from typing import List, Union
 import pandas as pd
 
 
-class OptionsDataFrame(BaseModel):
+class _OptionsDataFrame(BaseModel):
     """
     This class is used to validate the options types of the DataFrame.
     Don't use it directly.
@@ -11,9 +11,10 @@ class OptionsDataFrame(BaseModel):
 
     label: str
     is_ICP: bool
-    points: Union[float, int]
+    points: Union[float, int, None]
 
 
+# noinspection PyMethodParameters
 class Feature(BaseModel):
     """
     A feature of a model.
@@ -42,8 +43,8 @@ class Feature(BaseModel):
     def validate_options_df(cls, options_df: pd.DataFrame) -> pd.DataFrame:
         options_dicts = options_df.to_dict(orient='records')
 
-        # Validate each dictionary against OptionsDataFrame schema
-        [OptionsDataFrame(**options_dict) for options_dict in options_dicts]
+        # Validate each dictionary against _OptionsDataFrame schema
+        [_OptionsDataFrame(**options_dict) for options_dict in options_dicts]
 
         return options_df
 
