@@ -1,5 +1,17 @@
 from pydantic import BaseModel, validator, conlist
-from typing import List, Union
+from typing import List, Union, Optional
+import pandas as pd
+
+
+class OptionsDataFrame(BaseModel):
+    """
+    This class is used to validate the options types of the DataFrame.
+    Don't use it directly.
+    """
+
+    label: str
+    is_ICP: bool
+    points: Union[float, int]
 
 
 class Feature(BaseModel):
@@ -12,11 +24,28 @@ class Feature(BaseModel):
 
     name: str
     points_map: conlist(
-        List[Union[str, float]],
+        List[Union[str, bool, float]],
         min_items=1,
     )
+    options_df: pd.DataFrame = pd.DataFrame({
+        'label': [],
+        'is_ICP': [],
+        'points': []
+    })
     weight: float
     normalized_weight: float = None
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    @validator('options_df', pre=True)
+    def validate_options_df(cls, options_df: pd.DataFrame) -> pd.DataFrame:
+        options_dicts = options_df.to_dict(orient='records')
+
+        # Validate each dictionary against OptionsDataFrame schema
+        [OptionsDataFrame(**options_dict) for options_dict in options_dicts]
+
+        return options_df
 
     @validator('points_map', each_item=True)
     def validate_points_map(cls, points_map):

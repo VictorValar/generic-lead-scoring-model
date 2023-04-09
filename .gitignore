@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 .vscode/
+jupvenv/
+
+examples/examples_tests.ipynb
+examples/feature_a.csv
 # C extensions
 *.so
 .idea/
