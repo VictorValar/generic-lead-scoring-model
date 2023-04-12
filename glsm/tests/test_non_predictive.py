@@ -1,3 +1,5 @@
+import pandas as pd
+
 from glsm.non_predictive.model import NonPredictive
 from glsm.non_predictive.features import Feature
 
@@ -9,9 +11,7 @@ def test_non_predictive_instance(non_predictive_model):
 
 def test_sum_squares_normalized_weights_is_one(non_predictive_model):
     features = non_predictive_model.features
-    weights_sqr_sum = sum(
-        [feature.normalized_weight ** 2 for feature in features]
-    )
+    weights_sqr_sum = sum(feature.normalized_weight ** 2 for feature in features)
     assert weights_sqr_sum == 1
 
 
@@ -29,11 +29,17 @@ def test_add_features(non_predictive_model):
         name="test d",
         weight=0.5,
         points_map=[
-            ("Up to 50K", 50),
-            ("50K - 100K", 60),
-            ("100K - 200K", 80),
-            ("More than 200K", 100)
-        ]
+            ("Up to 50K", 10),
+            ("50K - 100K", 30),
+            ("100K - 200K", 50),
+            ("More than 200K", 100),
+        ],
+        options_df=pd.DataFrame([
+            {"label": "Up to 50K", "is_ICP": False, "points": 0},
+            {"label": "50K - 100K", "is_ICP": True, "points": 0},
+            {"label": "100K - 200K", "is_ICP": False, "points": 0},
+            {"label": "More than 200K", "is_ICP": False, "points": 0},
+        ])
     )
 
     feature_e = Feature(
@@ -44,8 +50,13 @@ def test_add_features(non_predictive_model):
             ("50K - 100K", 30),
             ("100K - 200K", 50),
             ("More than 200K", 100),
-        ]
-
+        ],
+        options_df=pd.DataFrame([
+            {"label": "AAA", "is_ICP": False, "points": 20},
+            {"label": "BBB", "is_ICP": True, "points": 10},
+            {"label": "CCC", "is_ICP": False, "points": 30},
+            {"label": "DDD", "is_ICP": False, "points": 40},
+        ])
     )
 
     model.add_features([feature_d, feature_e])
@@ -108,32 +119,24 @@ def test_compute_normalized_weights(non_predictive_model):
 
 def test_auto_assign_points(non_predictive_model):
     model = non_predictive_model
-    model.auto_assign_points()
+    features_map = model.auto_assign_points()
+    assert model.features[1].options_df.loc[0, "label"] == "Other"
+    assert model.features[1].options_df.loc[0, "is_ICP"] == False
+    assert model.features[1].options_df.loc[0, "points"] == 0
+
+    assert model.features[1].options_df.loc[3, "label"] == "Healthcare"
+    assert model.features[1].options_df.loc[3, "is_ICP"] == False
+    assert model.features[1].options_df.loc[3, "points"] == 30
+
+    assert model.features[1].options_df.loc[9, "label"] == "Telecom"
+    assert model.features[1].options_df.loc[9, "is_ICP"] == False
+    assert model.features[1].options_df.loc[9, "points"] == 100
+
     assert model.features[0].points_map == [
         ["Up to 50K", 0],
         ["50K - 100K", 50],
         ["100K - 200K", 75],
         ["More than 200K", 100],
-    ]
-    assert model.features[1].points_map == [
-        ["Other", 0],
-        ["Agriculture", 10],
-        ["Transportation", 20],
-        ["Healthcare", 30],
-        ["Manufacturing", 40],
-        ["Education", 50],
-        ["Finance", 50],
-        ["Technology", 50],
-        ["Retail", 75],
-        ["Telecom", 100],
-    ]
-    assert model.features[2].points_map == [
-        ["Up to $50K", 0],
-        ["50k - $100K", 25],
-        ["100k - $200K", 50],
-        ["$200K - $300K", 66.66666666666667],
-        ["$300K - $400K", 83.33333333333334],
-        ["More than $400K", 100],
     ]
 
 # def test_should_return_points_assignment_suggestion(non_predictive_model,):
@@ -145,28 +148,3 @@ def test_auto_assign_points(non_predictive_model):
 #             "50K - 100K": 60,
 #             "100K - 200K": 80,
 #             "More than 200K": 100
-#         },
-#         "Industry": {
-# "Agriculture": 10,
-# "Transportation": 90,
-# "Healthcare": 40,
-# "Manufacturing": 50,
-# "Education": 20,
-# "Finance": 30,
-# "Technology": 70,
-# "Retail": 60,
-# "Telecom": 80,
-# "Other": 100
-#         }
-
-
-# Agriculture
-# Transportation
-# Healthcare
-# Manufacturing
-# Education
-# Finance
-# Technology
-# Retail
-# Telecom
-# Other

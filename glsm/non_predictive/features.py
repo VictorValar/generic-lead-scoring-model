@@ -10,11 +10,10 @@ class _OptionsDataFrame(BaseModel):
     """
 
     label: str
-    is_ICP: bool
-    points: Union[float, int, None]
+    is_ICP: bool = False
+    points: Union[float, int, None] = None
 
 
-# noinspection PyMethodParameters
 class Feature(BaseModel):
     """
     A feature of a model.
@@ -28,11 +27,7 @@ class Feature(BaseModel):
         List[Union[str, bool, float]],
         min_items=1,
     )
-    options_df: pd.DataFrame = pd.DataFrame({
-        'label': [],
-        'is_ICP': [],
-        'points': []
-    })
+    options_df: pd.DataFrame
     weight: float
     normalized_weight: float = None
 
@@ -40,11 +35,15 @@ class Feature(BaseModel):
         arbitrary_types_allowed = True
 
     @validator('options_df', pre=True)
-    def validate_options_df(cls, options_df: pd.DataFrame) -> pd.DataFrame:
+    def validate_options_df(cls, options_df: pd.DataFrame, values: dict) -> pd.DataFrame:
         options_dicts = options_df.to_dict(orient='records')
 
         # Validate each dictionary against _OptionsDataFrame schema
         [_OptionsDataFrame(**options_dict) for options_dict in options_dicts]
+
+        feature_name = values.get('name')
+
+        options_df['Feature Name'] = feature_name
 
         return options_df
 

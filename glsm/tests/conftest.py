@@ -15,10 +15,10 @@ def non_predictive_model() -> NonPredictive:
         name="Monthly Users",
         weight=0.5,
         points_map=[
-            ["Up to 50K", 0],
+            ["Up to 50K", 0], # 50 - (50 / 4) * 4],
             ["50K - 100K", 50],
-            ["100K - 200K", 75],
-            ["More than 200K", 100],
+            ["100K - 200K", 75], # 50 + (50 / 2) * 1,
+            ["More than 200K", 100], # 50 + (50 / 2) * 2
         ],
         options_df=pd.DataFrame([
             {"label": "Up to 50K", "is_ICP": False, "points": 0},
@@ -70,7 +70,7 @@ def non_predictive_model() -> NonPredictive:
         ],
         options_df=pd.DataFrame([
             {"label": "Up to $50K", "is_ICP": False, "points": 0},
-            {"label": "50k - $100K", "is_ICP": False, "points": 0},
+            {"label": "50k - $100K", "is_ICP": True, "points": 0},
             {"label": "100k - $200K", "is_ICP": False, "points": 0},
             {"label": "$200K - $300K", "is_ICP": False, "points": 0},
             {"label": "$300K - $400K", "is_ICP": False, "points": 0},
