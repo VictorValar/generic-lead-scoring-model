@@ -119,17 +119,17 @@ def test_compute_normalized_weights(non_predictive_model):
 
 def test_auto_assign_points(non_predictive_model):
     model = non_predictive_model
-    features_map = model.auto_assign_points()
+    model.auto_assign_points()
     assert model.features[1].options_df.loc[0, "label"] == "Other"
-    assert model.features[1].options_df.loc[0, "is_ICP"] == False
+    assert model.features[1].options_df.loc[0, "is_ICP"] is False
     assert model.features[1].options_df.loc[0, "points"] == 0
 
     assert model.features[1].options_df.loc[3, "label"] == "Healthcare"
-    assert model.features[1].options_df.loc[3, "is_ICP"] == False
+    assert model.features[1].options_df.loc[3, "is_ICP"] is False
     assert model.features[1].options_df.loc[3, "points"] == 30
 
     assert model.features[1].options_df.loc[9, "label"] == "Telecom"
-    assert model.features[1].options_df.loc[9, "is_ICP"] == False
+    assert model.features[1].options_df.loc[9, "is_ICP"] is False
     assert model.features[1].options_df.loc[9, "points"] == 100
 
     assert model.features[0].points_map == [
@@ -139,12 +139,11 @@ def test_auto_assign_points(non_predictive_model):
         ["More than 200K", 100],
     ]
 
-# def test_should_return_points_assignment_suggestion(non_predictive_model,):
-#     model = non_predictive_model
-#     suggestion = model.suggest_points_assignment()
-#     assert suggestion == {
-#         "Monthly Users": {
-#             "Up to 50K": 50,
-#             "50K - 100K": 60,
-#             "100K - 200K": 80,
-#             "More than 200K": 100
+
+def test_preview_auto_assign_points(non_predictive_model):
+    model = non_predictive_model
+    preview = model.auto_assign_points(preview=True)
+    assert model.features[1].options_df.loc[3, "points"] == 0
+    assert model.features[1].options_df.loc[9, "points"] == 0
+    assert preview.loc[1, 'points'] == 50
+    assert preview.loc[19, 'points'] == 100

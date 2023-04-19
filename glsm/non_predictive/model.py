@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pandas as pd
 from pydantic import BaseModel, conlist
 from glsm.non_predictive.features import Feature
-from functools import reduce
+
 
 
 class NonPredictive(BaseModel):
@@ -55,7 +55,8 @@ class NonPredictive(BaseModel):
         """
         Computes the normalized weights of the model features_names.
 
-        The normalized weight of a feature is the weight of the feature divided by the magnitude of the weights of all the features_names.
+        The normalized weight of a feature is the weight of the feature divided by the magnitude of the weights of all
+        the features_names.
         """
 
         magnitude = math.sqrt(sum(feature.weight ** 2 for feature in self.features))
@@ -107,29 +108,29 @@ class NonPredictive(BaseModel):
         """
         return self.compute_lambda(lead) >= self.qualification_threshold
 
-    def auto_assign_points(self, ):
+    def auto_assign_points(self, preview: bool = False) -> pd.Dataframe:
         """
         Automatically assigns points to the of the model.
+        :returns Dataframe
         """
 
-        # icp_
         less_than_icp_remaining_points = self.qualification_threshold - self.points_range[0]
         more_than_icp_remaining_points = self.points_range[1] - self.qualification_threshold
         merged_df = pd.DataFrame()
-        for feature in self.features:
-            icp_index_range = []
-            less_than_icp_options_index: List[int] = []
-            more_than_icp_options_index: List[int] = []
-            step_down: float
-            step_up: float
-            df = feature.options_df
 
-            less_than_icp_options_count: int = 0
-            more_than_icp_options_count: int = 0
+        for feature in self.features:
+            icp_index_range: List[int] = []
+            df = feature.options_df.copy() if preview else feature.options_df
+
             for index, row in df.iterrows():
                 if row['is_ICP'] is True:
                     df.loc[index, 'points'] = 50
                     icp_index_range.append(index)
+
+            less_than_icp_options_index: List[int] = []
+            more_than_icp_options_index: List[int] = []
+            less_than_icp_options_count: int = 0
+            more_than_icp_options_count: int = 0
 
             for index, row in df.iterrows():
                 if row['is_ICP'] is False and index < icp_index_range[0]:
@@ -156,7 +157,9 @@ class NonPredictive(BaseModel):
             for index in more_than_icp_options_index:
                 df.loc[index, 'points'] = df.loc[index - 1, 'points'] + step_up
 
-            feature.options_df = df
+            if not preview:
+                feature.options_df = df
+
             merged_df = pd.concat([merged_df, df], ignore_index=True)
 
         return merged_df
