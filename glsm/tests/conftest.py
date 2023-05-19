@@ -14,12 +14,6 @@ def non_predictive_model() -> NonPredictive:
     feature_a = Feature(
         name="Monthly Users",
         weight=0.5,
-        points_map=[
-            ["Up to 50K", 0], # 50 - (50 / 4) * 4],
-            ["50K - 100K", 50],
-            ["100K - 200K", 75], # 50 + (50 / 2) * 1,
-            ["More than 200K", 100], # 50 + (50 / 2) * 2
-        ],
         options_df=pd.DataFrame([
             {"label": "Up to 50K", "is_ICP": False, "points": 0},
             {"label": "50K - 100K", "is_ICP": True, "points": 0},
@@ -31,18 +25,6 @@ def non_predictive_model() -> NonPredictive:
     feature_b = Feature(
         name="Industry",
         weight=0.25,
-        points_map=[
-            ["Other", 50 - (50 / 5) * 5],
-            ["Agriculture", 50 - (50 / 5) * 4],
-            ["Transportation", 50 - (50 / 5) * 3],
-            ["Healthcare", 50 - (50 / 5) * 2],
-            ["Manufacturing", 50 - (50 / 5)],
-            ["Education", 50],
-            ["Finance", 50],
-            ["Technology", 50],
-            ["Retail", 75],
-            ["Telecom", 100],
-        ],
         options_df=pd.DataFrame([
             {"label": "Other", "is_ICP": False, "points": 0},
             {"label": "Agriculture", "is_ICP": False, "points": 0},
@@ -60,14 +42,6 @@ def non_predictive_model() -> NonPredictive:
     feature_c = Feature(
         name="Mkt Investment",
         weight=1,
-        points_map=[
-            ["Up to $50K", 50 - (50 / 2) * 2],
-            ["50k - $100K", 50 - (50 / 2)],
-            ["100k - $200K", 50],
-            ["$200K - $300K", 50 + (50 / 3)],
-            ["$300K - $400K", 50 + (50 / 3) * 2],  # 83.33333333333334
-            ["More than $400K", 50 + (50 / 3) * 3],
-        ],
         options_df=pd.DataFrame([
             {"label": "Up to $50K", "is_ICP": False, "points": 0},
             {"label": "50k - $100K", "is_ICP": True, "points": 0},
@@ -78,7 +52,6 @@ def non_predictive_model() -> NonPredictive:
         ])
     )
     model.add_features([feature_a, feature_b, feature_c])
-
     model.compute_normalized_weights()
 
     yield model
@@ -90,9 +63,9 @@ def lead():
     Yields a lead
     """
     yield {
-        "Monthly Users": "50K - 100K",
+        "Monthly Users": "100K - 200K",
         "Industry": "Technology",
-        "Mkt Investment": "$300K - $400K",
+        "Mkt Investment": "100k - $200K",
     }
 
 
@@ -101,12 +74,6 @@ def feature_instances():
     feature_a = Feature(
         name="Monthly Users",
         weight=0.5,
-        points_map=[
-            ["Up to 50K", 0],
-            ["50K - 100K", 50],
-            ["100K - 200K", 75],
-            ["More than 200K", 100],
-        ],
         options_df=pd.DataFrame({
             'label': ['Up to 50K', '50K - 100K', '100K - 200K', 'More than 200K'],
             'is_ICP': [False, True, False, False],
@@ -117,11 +84,6 @@ def feature_instances():
     feature_b = Feature(
         name="Industry",
         weight=0.25,
-        points_map=[
-            ["Other"],
-            ["Agriculture"],
-            ["Transportation"]
-        ],
         options_df=pd.DataFrame({
             'label': ['Other', 'Agriculture', 'Transportation'],
             'is_ICP': [False, True, False],

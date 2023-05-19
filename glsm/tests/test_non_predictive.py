@@ -15,11 +15,12 @@ def test_sum_squares_normalized_weights_is_one(non_predictive_model):
     assert weights_sqr_sum == 1
 
 
-def test_compute_lambda_equals_75(non_predictive_model, lead):
+def test_compute_lambda_returns_64(non_predictive_model, lead):
     model = non_predictive_model
+    model.auto_assign_points()
     lambda_value = model.compute_lambda(lead)
 
-    assert lambda_value == 75.4
+    assert lambda_value == 64.29
 
 
 def test_add_features(non_predictive_model):
@@ -28,29 +29,17 @@ def test_add_features(non_predictive_model):
     feature_d = Feature(
         name="test d",
         weight=0.5,
-        points_map=[
-            ("Up to 50K", 10),
-            ("50K - 100K", 30),
-            ("100K - 200K", 50),
-            ("More than 200K", 100),
-        ],
         options_df=pd.DataFrame([
-            {"label": "Up to 50K", "is_ICP": False, "points": 0},
-            {"label": "50K - 100K", "is_ICP": True, "points": 0},
-            {"label": "100K - 200K", "is_ICP": False, "points": 0},
-            {"label": "More than 200K", "is_ICP": False, "points": 0},
+            {"label": "ZZZ", "is_ICP": False, "points": 0},
+            {"label": "KKKK", "is_ICP": True, "points": 0},
+            {"label": "UUUU", "is_ICP": False, "points": 0},
+            {"label": "WWWW", "is_ICP": False, "points": 0},
         ])
     )
 
     feature_e = Feature(
         name="test e",
         weight=0.5,
-        points_map=[
-            ("Up to 50K", 10),
-            ("50K - 100K", 30),
-            ("100K - 200K", 50),
-            ("More than 200K", 100),
-        ],
         options_df=pd.DataFrame([
             {"label": "AAA", "is_ICP": False, "points": 20},
             {"label": "BBB", "is_ICP": True, "points": 10},
@@ -60,8 +49,9 @@ def test_add_features(non_predictive_model):
     )
 
     model.add_features([feature_d, feature_e])
-
+    # model.auto_assign_points()
     assert len(model.features) == 5
+    assert model.features[4].options_df.loc[0, "points"] == 20
 
 
 def test_describe_features(non_predictive_model):
@@ -93,6 +83,7 @@ def test_should_remove_features(non_predictive_model):
 
 def test_qualification_assessment_true(non_predictive_model, lead):
     model = non_predictive_model
+    model.auto_assign_points()
     assert model.assess_qualification(lead) is True
 
 
@@ -121,24 +112,16 @@ def test_auto_assign_points(non_predictive_model):
     model = non_predictive_model
     model.auto_assign_points()
     assert model.features[1].options_df.loc[0, "label"] == "Other"
-    assert model.features[1].options_df.loc[0, "is_ICP"] is False
+    assert model.features[1].options_df.loc[0, "is_ICP"] == False
     assert model.features[1].options_df.loc[0, "points"] == 0
 
     assert model.features[1].options_df.loc[3, "label"] == "Healthcare"
-    assert model.features[1].options_df.loc[3, "is_ICP"] is False
+    assert model.features[1].options_df.loc[3, "is_ICP"] == False
     assert model.features[1].options_df.loc[3, "points"] == 30
 
     assert model.features[1].options_df.loc[9, "label"] == "Telecom"
-    assert model.features[1].options_df.loc[9, "is_ICP"] is False
+    assert model.features[1].options_df.loc[9, "is_ICP"] == False
     assert model.features[1].options_df.loc[9, "points"] == 100
-
-    assert model.features[0].points_map == [
-        ["Up to 50K", 0],
-        ["50K - 100K", 50],
-        ["100K - 200K", 75],
-        ["More than 200K", 100],
-    ]
-
 
 def test_preview_auto_assign_points(non_predictive_model):
     model = non_predictive_model
@@ -147,3 +130,22 @@ def test_preview_auto_assign_points(non_predictive_model):
     assert model.features[1].options_df.loc[9, "points"] == 0
     assert preview.loc[1, 'points'] == 50
     assert preview.loc[19, 'points'] == 100
+
+
+def test_assign_points(non_predictive_model):
+    model = non_predictive_model
+    model.auto_assign_points()
+
+    less_than_icp_options_indexes = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+    # assert
+
+def test_icp_options_are_grouped(non_predictive_model):
+    """
+    ICP options should be grouped together
+    """
+    model = non_predictive_model
+    model.auto_assign_points()
+
+
+

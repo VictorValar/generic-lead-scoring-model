@@ -5,7 +5,6 @@ from pydantic import BaseModel, conlist
 from glsm.non_predictive.features import Feature
 
 
-
 class NonPredictive(BaseModel):
     """
     A non-predictive lead scoring model.
@@ -98,7 +97,8 @@ class NonPredictive(BaseModel):
                     self.round_decimals
                 )
             }
-            print(description)
+
+        print(description)
 
         return description
 
@@ -108,10 +108,32 @@ class NonPredictive(BaseModel):
         """
         return self.compute_lambda(lead) >= self.qualification_threshold
 
-    def auto_assign_points(self, preview: bool = False) -> pd.Dataframe:
+    def _assign_points(self, icp_index_range: List[int], df: pd.DataFrame, preview: bool = False):
         """
-        Automatically assigns points to the of the model.
-        :returns Dataframe
+        Private method that is called by the auto_assign_points method.
+        """
+
+        less_than_icp_remaining_points = self.qualification_threshold - self.points_range[0]
+        more_than_icp_remaining_points = self.points_range[1] - self.qualification_threshold
+        less_than_icp_options_indexes: List[int] = []
+        more_than_icp_options_indexes: List[int] = []
+
+        for index, row in df.iterrows():
+            if row['is_ICP'] is False:
+                if index < icp_index_range[0]:
+                    less_than_icp_options_indexes.append(index)
+                if index > icp_index_range[-1]:
+                    more_than_icp_options_indexes.append(index)
+
+    def auto_assign_points(self, preview: bool = False) -> pd.DataFrame:
+        """
+        Automatically assigns points to the options of each feature based on the qualification threshold.
+        A preview of the points assignment can be returned if preview is set to True.
+
+        Args:
+            preview (bool): If True, returns a preview of the points assignment. Defaults to False.
+        Returns:
+            DataFrame: A dataframe with the points assigned to each option of each feature.
         """
 
         less_than_icp_remaining_points = self.qualification_threshold - self.points_range[0]
@@ -119,7 +141,8 @@ class NonPredictive(BaseModel):
         merged_df = pd.DataFrame()
 
         for feature in self.features:
-            icp_index_range: List[int] = []
+
+            icp_index_range: List = []
             df = feature.options_df.copy() if preview else feature.options_df
 
             for index, row in df.iterrows():
@@ -127,34 +150,27 @@ class NonPredictive(BaseModel):
                     df.loc[index, 'points'] = 50
                     icp_index_range.append(index)
 
-            less_than_icp_options_index: List[int] = []
-            more_than_icp_options_index: List[int] = []
-            less_than_icp_options_count: int = 0
-            more_than_icp_options_count: int = 0
+            less_than_icp_options_indexes: List = []
+            more_than_icp_options_indexes: List = []
 
             for index, row in df.iterrows():
-                if row['is_ICP'] is False and index < icp_index_range[0]:
-                    less_than_icp_options_index.append(index)
-                    less_than_icp_options_count += 1
-                if row['is_ICP'] is False and index > icp_index_range[-1]:
-                    more_than_icp_options_index.append(index)
-                    more_than_icp_options_count += 1
+                if row['is_ICP'] is False:
+                    if index < icp_index_range[0]:
+                        less_than_icp_options_indexes.append(index)
+                    if index > icp_index_range[-1]:
+                        more_than_icp_options_indexes.append(index)
 
-            step_down = - (less_than_icp_remaining_points / less_than_icp_options_count)
-            step_up = more_than_icp_remaining_points / more_than_icp_options_count
+            step_down = - (less_than_icp_remaining_points / len(less_than_icp_options_indexes))
+            step_up = more_than_icp_remaining_points / len(more_than_icp_options_indexes)
 
             # Assign points to options less desirable than the ICP option
-            for index in reversed(less_than_icp_options_index):
-
+            for index in reversed(less_than_icp_options_indexes):
                 new_points = df.loc[index + 1, 'points'] + step_down
 
-                if new_points < 0:
-                    df.loc[index, 'points'] = 0
-                else:
-                    df.loc[index, 'points'] = new_points
+                df.loc[index, 'points'] = max(new_points, 0)
 
             # Assign points to options more desirable than the ICP option
-            for index in more_than_icp_options_index:
+            for index in more_than_icp_options_indexes:
                 df.loc[index, 'points'] = df.loc[index - 1, 'points'] + step_up
 
             if not preview:
