@@ -28,7 +28,7 @@ class NonPredictive(BaseModel):
 
     def remove_features(self, features_names: List[str]):
         """
-        Removes a list of features_names from the model given their names.
+        Removes a list of feature(s) from the model given their names.
         """
 
         for name in features_names:
@@ -67,18 +67,16 @@ class NonPredictive(BaseModel):
         """
         Computes and returns the qualification threshold based on the points range set for the model.
         """
-
-        points_min = self.points_range[0]
-        points_max = self.points_range[1]
-
         try:
+            points_min = self.points_range[0]
+            points_max = self.points_range[1]
             theta = points_max - (points_max - points_min) / 2
+            self.qualification_threshold = theta
+            return theta
         except TypeError as exc:
             raise TypeError("Points range must be a tuple of two numeric types") from exc
 
-        self.qualification_threshold = theta
 
-        return theta
 
     def describe_features(self, ):
         """
