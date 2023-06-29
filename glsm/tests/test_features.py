@@ -9,6 +9,7 @@ def test_feature_instance(feature_instances):
     assert feature_instances[1].name == "Industry"
     assert feature_instances[1].weight == 0.25
 
+
 def test_get_points(feature_instances):
     assert feature_instances[0].get_points("Up to 50K") == 0
 
@@ -19,4 +20,11 @@ def test_feature_instances_options_df_values(feature_instances):
     assert feature_instances[1].options_df.label[0] == "Other"
     assert feature_instances[1].options_df.label[1] == "Agriculture"
     assert feature_instances[1].options_df.label[2] == "Transportation"
+
+
+def test_at_least_one_icp_in_options(feature_instances):
+    """
+    Checks if at least one is_ICP is set to True
+    """
+    assert feature_instances[1].options_df.is_ICP.sum() == 1
 

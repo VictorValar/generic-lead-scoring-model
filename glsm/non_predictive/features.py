@@ -34,6 +34,10 @@ class Feature(BaseModel):
         # Validate each dictionary against _OptionsDataFrame schema
         [_OptionsDataFrame(**options_dict) for options_dict in options_dicts]
 
+        # Validate if there is at least one ICP
+        if not options_df.is_ICP.sum():
+            raise ValueError('At least one option must be an ICP')
+
         feature_name = values.get('name')
 
         options_df['Feature Name'] = feature_name
