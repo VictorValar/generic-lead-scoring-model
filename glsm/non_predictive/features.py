@@ -58,5 +58,5 @@ class Feature(BaseModel):
         """
         for item in self.options_df.values:
             if item[0] == label:
-                return item[2]
+                return item[2] if type(item[2]) in [float, int] else item[3]
         raise ValueError(f'Label {label} not found in options Data Frame')

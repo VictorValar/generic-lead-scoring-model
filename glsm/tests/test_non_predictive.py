@@ -30,10 +30,10 @@ def test_add_features(non_predictive_model):
         name="test d",
         weight=0.5,
         options_df=pd.DataFrame([
-            {"label": "ZZZ", "is_ICP": False, "points": 0},
-            {"label": "KKKK", "is_ICP": True, "points": 0},
-            {"label": "UUUU", "is_ICP": False, "points": 0},
-            {"label": "WWWW", "is_ICP": False, "points": 0},
+            {"label": "ZZZ", "is_ICP": False},
+            {"label": "KKKK", "is_ICP": True},
+            {"label": "UUUU", "is_ICP": False},
+            {"label": "WWWW", "is_ICP": False},
         ])
     )
 
@@ -41,17 +41,15 @@ def test_add_features(non_predictive_model):
         name="test e",
         weight=0.5,
         options_df=pd.DataFrame([
-            {"label": "AAA", "is_ICP": False, "points": 20},
-            {"label": "BBB", "is_ICP": True, "points": 10},
-            {"label": "CCC", "is_ICP": False, "points": 30},
-            {"label": "DDD", "is_ICP": False, "points": 40},
+            {"label": "AAA", "is_ICP": False},
+            {"label": "BBB", "is_ICP": True},
+            {"label": "CCC", "is_ICP": False},
+            {"label": "DDD", "is_ICP": False},
         ])
     )
 
     model.add_features([feature_d, feature_e])
-    # model.auto_assign_points()
     assert len(model.features) == 5
-    assert model.features[4].options_df.loc[0, "points"] == 20
 
 
 def test_describe_features(non_predictive_model):
