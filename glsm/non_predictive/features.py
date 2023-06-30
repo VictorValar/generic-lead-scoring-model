@@ -1,5 +1,5 @@
-from pydantic import BaseModel, validator, conlist
-from typing import List, Union
+from pydantic import BaseModel, validator
+from typing import Union
 import pandas as pd
 
 
@@ -31,16 +31,24 @@ class Feature(BaseModel):
     def validate_options_df(cls, options_df: pd.DataFrame, values: dict) -> pd.DataFrame:
         options_dicts = options_df.to_dict(orient='records')
 
-        # Validate each dictionary against _OptionsDataFrame schema
+        # Pydantic will raise a ValidationError if the types are not correct
         [_OptionsDataFrame(**options_dict) for options_dict in options_dicts]
 
-        # Validate if there is at least one ICP
-        if not options_df.is_ICP.sum():
+        # There must be at least one ICP option
+        if options_df.is_ICP.sum() == 0:
             raise ValueError('At least one option must be an ICP')
 
-        feature_name = values.get('name')
+        # ICP options need to be grouped together
+        if options_df.is_ICP.sum() > 1:
+            icp_options_df = options_df[options_df.is_ICP == True]
 
-        options_df['Feature Name'] = feature_name
+            for i in range(len(icp_options_df.index) - 1):
+                idx = icp_options_df.index[i]
+                idx_plus_1 = icp_options_df.index[i + 1]
+                if idx_plus_1 - idx > 1:
+                    raise ValueError("ICP options must be grouped together")
+
+        options_df['Feature Name'] = values.get('name')
 
         return options_df
 

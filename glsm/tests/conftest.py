@@ -84,11 +84,18 @@ def feature_instances():
     feature_b = Feature(
         name="Industry",
         weight=0.25,
-        options_df=pd.DataFrame({
-            'label': ['Other', 'Agriculture', 'Transportation'],
-            'is_ICP': [False, True, False],
-            'points': [0, 0, 0]
-        })
+        options_df=pd.DataFrame([
+            {"label": "Other", "is_ICP": False, "points": 0},
+            {"label": "Agriculture", "is_ICP": False, "points": 0},
+            {"label": "Transportation", "is_ICP": False, "points": 0},
+            {"label": "Healthcare", "is_ICP": False, "points": 0},
+            {"label": "Manufacturing", "is_ICP": False, "points": 0},
+            {"label": "Education", "is_ICP": True, "points": 0},
+            {"label": "Finance", "is_ICP": True, "points": 0},
+            {"label": "Technology", "is_ICP": True, "points": 0},
+            {"label": "Retail", "is_ICP": False, "points": 0},
+            {"label": "Telecom", "is_ICP": False, "points": 0},
+        ])
     )
 
     yield feature_a, feature_b
