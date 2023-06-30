@@ -12,25 +12,26 @@ Soon!
 
 ### Non-predictive Model
 
-| Name              | Description                                                                                                         | Variable                                                  |
-|-------------------|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| Weight            | Feature weight   that represents the relative importance of each feature                                            | $$w$$                                                     |
-| Points            | Assigned points of each feature                                                                                     | $$p$$                                                     |
-| Normalized weight | Weights unit vector normalization                                                                                   | $${\hat{w}} = \frac{w}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}$$ |
-| Lead score        | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i}$$             |
+
+| Name | Description | Variable|
+|-------------------|-------------------|-------------------|
+| Weight| Feature weight that represents the relative importance of each feature | $$w$$ |
+| Points| Assigned points of each feature | $$p$$ |
+| Normalized weight | Weights unit vector normalization | $${\hat{w}} = \frac{w}{\sqrt{\sum\limits^{n}_{i=0}w_i^2}}$$ |
+| Lead score | A weighted sum of assigned points for each feature, where the feature weights are normalized to form a unit vector. | $$\lambda = \sum_{i=1}^n {\hat{w}_i^2}{p_i}$$ |
 
 ---
 
 ## Index
 
 1. [About](#about)
-   1. [Predictive Model](#predictive-model)
-   2. [Non-predictive Model](#non-predictive-model)
+   1. [Predictive Model](#predictive)
+   2. [Non-predictive Model](#non-predictive)
 2. [Disclaimer](#disclaimer)
 3. [Installation](#installation)
 4. [Theory](#theory)
-   1. [Predictive Model](#predictive-model-1)
-   2. [Non-predictive Model](#non-predictive-model-1)
+   1. [Predictive Model](#predictive-model)
+   2. [Non-predictive Model](#non-predictive-model)
       1. [Weight:](#weight-w)
       2. [Normalized Weight:](#normalized-weight-hatw)
          1. [Unit vector normalization:](#unit-vector-normalization)
@@ -39,16 +40,16 @@ Soon!
       3. [Qualification threshold](#qualification-threshold)
       4. [Points:](#points-p)
       5. [Lead Score:](#lead-score-lambda)
-      6. [Features](#features-fn)
+      6. [Features](#features)
 5. [Usage](#usage)
-   1. [Predictive Model](#predictive-model-2)
-   2. [Non-predictive Model](#non-predictive-model-2)
+   1. [Predictive Model](#predictive-model-usage)
+   2. [Non-predictive Model](#non-predictive-model-usage)
       1. [Importing the library](#importing-the-library)
       2. [Instantiating the model and adding features](#instantiating-the-model-and-adding-features)
-      3. [Importing lead data](#importing-lead-data)
+      3. [Removing features](#removing-features)
+      4. [Calculating the lead score](#calculating-the-lead-score)
          1. [From a dictionary](#from-a-dictionary)
          2. [From a csv](#from-a-csv)
-      4. [Calculating the lead score](#calculating-the-lead-score)
 
 ## Disclaimer
 
@@ -66,6 +67,7 @@ Can be installed using pip:
 ```bash
 pip install glsm
 ```
+
 ---
 
 # Theory
@@ -75,13 +77,13 @@ There are two ways for you to understand the proposed models:
 1. Through the [Google Sheets simulator](https://docs.google.com/spreadsheets/d/1ESEtcjno36ZLW5XMEoHqLKHjiZMkrZeIECcrcgFxHzA/edit?usp=sharing) (Non-predictive only)
 2. Reading the following sections
 
-## Predictive Model
+## Predictive
 
 Soon!
 
 ---
 
-## Non-predictive Model
+## Non-predictive
 
 This model and the following set of rules are a suggestion to get you started. You can use them as a starting point and adapt them to your business needs.
 The library is flexible enough to allow you to use your own assumptions and  rules.
@@ -196,7 +198,7 @@ Note that more than one ICP option can be defined for each feature as seen below
 
 
 | Industry       | Points | Calculation             |
-|----------------|--------|-------------------------|
+| -------------- | ------ | ----------------------- |
 | Other          | 0      | 50 - (50/5)*5           |
 | Agriculture    | 10     | 50 - (50/5)*4           |
 | Transportation | 20     | 50 - (50/5)*3           |
@@ -220,7 +222,7 @@ The higher the lead score, the more desirable the lead is. The lead score is the
 
 Lead score can be used to rank and prioritize leads, and to create audiences based on the lead score on platforms such as Google Analytics, Facebook Ads, etc.
 
-### Features ($f_n$)
+### Features
 
 Features are a set of characteristics assigned to each lead. If you have difficulties finding out which features to add, start by adding relevant lead form or CRM fields as features.
 
@@ -232,7 +234,7 @@ A feature have several options, each of which represent a range of values. For e
 
 
 | Monthly Website Users | Points   |
-|-----------------------|----------|
+| --------------------- | -------- |
 | Up to 50k             | 0        |
 | 50k - 100k            | 50 (ICP) |
 | 100k - 200k           | 75       |
@@ -244,11 +246,11 @@ Remember that this is a suggestion, you can assign the points as you see fit and
 
 # Usage
 
-## Predictive Model
+## Predictive Model usage
 
 Soon!
 
-## Non-predictive Model
+## Non-predictive Model usage
 
 In the examples folder you can find a Jupyter Notebook with a step-by-step guide on how to use the library.
 You may also want to check the [Google Sheets simulator](https://docs.google.com/spreadsheets/d/1ESEtcjno36ZLW5XMEoHqLKHjiZMkrZeIECcrcgFxHzA/edit?usp=sharing) (Non-predictive only)
@@ -259,40 +261,46 @@ You may also want to check the [Google Sheets simulator](https://docs.google.com
 from glsm.non_predictive.model import NonPredictive
 from glsm.non_predictive.features import Feature
 ```
-### Instantiating the model and adding features
 
+### Instantiating the model and adding features
 ```python
 model = NonPredictive()
 
 feature_a = Feature(
     name="Monthly Users",
     weight=0.5,
-    points_map=[
-        ["Up to 50K",0],
-        ["50K - 100K",50],
-        ["100K - 200K",75],
-        ["More than 200K",100],
-    ]
+    options_df=pd.DataFrame([
+            {"label": "Up to 50k", "is_ICP": False},
+            {"label": "50k - 100k", "is_ICP": True},
+            {"label": "100k - 200k", "is_ICP": False},
+            {"label": "More than 200k", "is_ICP": False},
+        ])
 )
 feature_b = Feature(
     name="Industry",
     weight=0.25,
-    points_map=[
-        ["Other",50 - (50/5)*5], # 0
-        ["Agriculture",50 - (50/5)*4],
-        ["Transportation",50 - (50/5)*3],
-        ["Healthcare",50 - (50/5)*2],
-        ["Manufacturing",50 - (50/5)],
-        ["Education",50],
-        ["Finance",50],
-        ["Technology",50],
-        ["Retail",50 + (50/2)],
-        ["Telecom",50 + (50/2)*2], # 100
-    ]
+    options_df=pd.DataFrame([
+            {"label": "Other", "is_ICP": False},
+            {"label": "Agriculture", "is_ICP": False},
+            {"label": "Transportation", "is_ICP": False},
+            {"label": "Healthcare", "is_ICP": False},
+            {"label": "Manufacturing", "is_ICP": False},
+            {"label": "Education", "is_ICP": True},
+            {"label": "Finance", "is_ICP": True},
+            {"label": "Technology", "is_ICP": True},
+            {"label": "Retail", "is_ICP": False},
+            {"label": "Telecom", "is_ICP": False},
+        ])
 )
 model.add_features([feature_a, feature_b])
 ```
-### Importing lead data
+
+### Removing features
+```python
+model.remove_features(['Industry'], ['Monthly Users'])
+```
+
+### Calculating the lead score
 
 #### From a dictionary
 
@@ -302,38 +310,19 @@ lead = {
         "Industry": "Technology",
         "Mkt Investment": "$300K - $400K",
     }
-```
-#### From a csv
 
-```python
-import csv
-
-with open('leads.csv', 'r') as file:
-    if file.read(3) == b'\xef\xbb\xbf':
-        file.seek(3)
-    csv_reader = csv.reader(file)
-    headers = next(csv_reader)
-
-    # New csv file adding lambda values
-    with open('leads_with_lambda.csv', 'w', newline='') as new_file:
-        csv_writer = csv.writer(new_file)
-        csv_writer.writerow(headers + ['lambda'])
-
-        for row in csv_reader:
-            lead = dict(zip(headers, row))
-            lambda_value = model.compute_lambda(lead)
-            csv_writer.writerow(row + [lambda_value])
-
-```
-### Calculating the lead score
-
-```python
 lambda_value = model.compute_lambda(lead)
 ```
-### Checking if the lead is qualified
 
-The assess_qualification() method returns True if the lead is qualified ($\lambda \geq \theta$), False otherwise.
-
+#### From a csv
+Check out the leads.csv file in the examples folder.
 ```python
-model.assess_qualification(lead) # True/False
+df = pd.read_csv('leads.csv')
+df['lambda'] = df.apply(
+    lambda row: model.compute_lambda(row.to_dict()),
+    axis=1
+)
 ```
+
+
+
