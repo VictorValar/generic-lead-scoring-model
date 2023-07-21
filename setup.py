@@ -13,10 +13,9 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 with open(requirements_filename) as f:
     INSTALL_REQUIRES = f.read().splitlines()
 
-EXTRA_REQUIRES = ['pytest']
-VERSION = '0.1.1'
-DESCRIPTION = 'A Python package that simplifies the process of building predictive and non-predictive lead scoring ' \
-              'models.'
+# EXTRA_REQUIRES = ['pytest']
+VERSION = '0.1.3'
+DESCRIPTION = 'A Python package that simplifies the process of building lead scoring models.'
 LONG_DESCRIPTION = long_description
 PACKAGE_LICENSE = 'LICENSE.txt'
 
@@ -32,7 +31,7 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     install_requires=INSTALL_REQUIRES,
-    extras_require=EXTRA_REQUIRES,
+    # extras_require=EXTRA_REQUIRES,
     keywords=['python', 'lead score', 'modeling', 'lead generation', 'lead scoring', 'lead scoring model'],
     classifiers=[
         "Development Status :: 4 - Beta",
