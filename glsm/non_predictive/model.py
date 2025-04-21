@@ -142,6 +142,10 @@ class NonPredictive(BaseModel):
 
             icp_index_range: List = []
             df = feature.options_df.copy() if preview else feature.options_df
+            if 'points' not in df.columns:
+                df['points'] = 0.0
+            else:
+                df['points'] = df['points'].astype(float)
 
             for index, row in df.iterrows():
                 if row['is_ICP'] is True:
