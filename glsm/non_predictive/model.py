@@ -106,23 +106,6 @@ class NonPredictive(BaseModel):
         """
         return self.compute_lambda(lead) >= self.qualification_threshold
 
-    def _assign_points(self, icp_index_range: List[int], df: pd.DataFrame, preview: bool = False):
-        """
-        Private method that is called by the auto_assign_points method.
-        """
-
-        less_than_icp_remaining_points = self.qualification_threshold - self.points_range[0]
-        more_than_icp_remaining_points = self.points_range[1] - self.qualification_threshold
-        less_than_icp_options_indexes: List[int] = []
-        more_than_icp_options_indexes: List[int] = []
-
-        for index, row in df.iterrows():
-            if row['is_ICP'] is False:
-                if index < icp_index_range[0]:
-                    less_than_icp_options_indexes.append(index)
-                if index > icp_index_range[-1]:
-                    more_than_icp_options_indexes.append(index)
-
     def auto_assign_points(self, preview: bool = False) -> pd.DataFrame:
         """
         Automatically assigns points to the options of each feature based on the qualification threshold.
