@@ -19,13 +19,12 @@ tzdata = "==2023.3"
 pandas = "*"
 pydantic = "==2.4.0"
 pex = "*"
-
+toml = "*"
 
 [dev-packages]
-bump-my-version = "*"
 twine = "*"
 pytest = "*"
-toml = "*"
+
 
 [requires]
 python_version = "3.10"
