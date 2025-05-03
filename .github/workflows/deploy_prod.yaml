@@ -30,7 +30,7 @@ jobs:
 
       - name: Bump patch version, commit and tag
         run: |
-          bump-my-version patch --allow-dirty
+          bump-my-version --allow-dirty bump
           git push origin HEAD --follow-tags
         env:
           GIT_AUTHOR_NAME: github-actions
