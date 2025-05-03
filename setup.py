@@ -15,7 +15,7 @@ pipfile_data = toml.load(pipfile_path)
 packages = pipfile_data.get('packages', {})
 INSTALL_REQUIRES = [f"{pkg}{'' if spec == '*' else spec}" for pkg, spec in packages.items()]
 
-VERSION = '0.1.4'
+VERSION = open("VERSION").read().strip()
 DESCRIPTION = 'A Python package that simplifies the process of building lead scoring models.'
 PACKAGE_LICENSE = 'LICENSE.txt'
 
