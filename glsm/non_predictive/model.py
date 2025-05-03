@@ -106,13 +106,13 @@ class NonPredictive(BaseModel):
         """
         return self.compute_lambda(lead) >= self.qualification_threshold
 
-    def auto_assign_points(self, preview: bool = False) -> pd.DataFrame:
+    def auto_assign_points(self, preview: bool = True) -> pd.DataFrame:
         """
         Automatically assigns points to the options of each feature based on the qualification threshold.
         A preview of the points assignment can be returned if preview is set to True.
 
         Args:
-            preview (bool): If True, returns a preview of the points assignment. Defaults to False.
+            preview (bool): If True, returns a preview of the points assignment. Defaults to True.
         Returns:
             DataFrame: A dataframe with the points assigned to each option of each feature.
         """
